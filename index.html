@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manutenções Prediais</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2317181A' rx='16'/%3E%3Cpath d='M30 70 L50 30 L70 70 M38 55 L62 55' stroke='%23D97C2B' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F1EFE6;
+    --surface: #FBFAF5;
+    --ink: #21221D;
+    --ink-dim: #63614F;
+    --line: #DAD5C4;
+    --line-strong: #B9B29A;
+    --accent: #BE6A1E;
+    --accent-ink: #FFFDF8;
+    --accent-soft: #F0DAB9;
+    --info: #345A82;
+    --st-aberta: #A6690C;
+    --st-aberta-bg: #F6E4C4;
+    --st-andamento: #2C5C88;
+    --st-andamento-bg: #DCE7F0;
+    --st-execucao: #1F7A6C;
+    --st-execucao-bg: #D8ECE7;
+    --st-concluida: #326B45;
+    --st-concluida-bg: #DCEADF;
+    --st-cancelada: #8A4238;
+    --st-cancelada-bg: #EEDBD6;
+    --danger: #A23B2E;
+    --shadow: 0 1px 2px rgba(33,34,29,0.06), 0 6px 20px -8px rgba(33,34,29,0.18);
+    --radius: 10px;
+    --font-display: 'Big Shoulders', 'Arial Narrow', sans-serif;
+    --font-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #17181A;
+      --surface: #1E201E;
+      --ink: #EDEAE0;
+      --ink-dim: #9A9887;
+      --line: #34362F;
+      --line-strong: #474A3F;
+      --accent: #E08A3E;
+      --accent-ink: #1A1300;
+      --accent-soft: #4A3520;
+      --info: #7FA6CC;
+      --st-aberta: #E0A542;
+      --st-aberta-bg: #3D3419;
+      --st-andamento: #7FA6CC;
+      --st-andamento-bg: #223140;
+      --st-execucao: #6FC9B8;
+      --st-execucao-bg: #1E3733;
+      --st-concluida: #79C08D;
+      --st-concluida-bg: #1F3327;
+      --st-cancelada: #D08D80;
+      --st-cancelada-bg: #3A2521;
+      --danger: #D08D80;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 24px -10px rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #17181A;
+    --surface: #1E201E;
+    --ink: #EDEAE0;
+    --ink-dim: #9A9887;
+    --line: #34362F;
+    --line-strong: #474A3F;
+    --accent: #E08A3E;
+    --accent-ink: #1A1300;
+    --accent-soft: #4A3520;
+    --info: #7FA6CC;
+    --st-aberta: #E0A542;
+    --st-aberta-bg: #3D3419;
+    --st-andamento: #7FA6CC;
+    --st-andamento-bg: #223140;
+    --st-execucao: #6FC9B8;
+    --st-execucao-bg: #1E3733;
+    --st-concluida: #79C08D;
+    --st-concluida-bg: #1F3327;
+    --st-cancelada: #D08D80;
+    --st-cancelada-bg: #3A2521;
+    --danger: #D08D80;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 24px -10px rgba(0,0,0,0.55);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  h1, h2, h3, .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  a { color: var(--info); }
+  button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  ::placeholder { color: var(--ink-dim); opacity: .8; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink);
+    border-radius: 8px; padding: .6em 1.1em; font-weight: 600; font-size: .92rem;
+    transition: transform .08s ease, border-color .15s ease;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover { filter: brightness(1.06); border-color: var(--accent); }
+  .btn-ghost { background: transparent; border-color: transparent; }
+  .btn-ghost:hover { border-color: var(--line-strong); }
+  .btn-danger { color: var(--danger); border-color: var(--danger); background: transparent; }
+  .btn-sm { padding: .38em .8em; font-size: .8rem; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  input[type=text], input[type=email], input[type=password], input[type=tel], input[type=number], input[type=datetime-local], textarea, select {
+    width: 100%; background: var(--surface); border: 1px solid var(--line-strong);
+    border-radius: 8px; padding: .65em .8em; color: var(--ink);
+  }
+  textarea { resize: vertical; min-height: 5.5em; }
+  label { display: block; font-size: .78rem; font-weight: 600; color: var(--ink-dim); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .35em; }
+  .field { margin-bottom: 1rem; }
+  .field-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .field-row > .field { flex: 1 1 160px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 1.25rem;
+  }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: .4em; padding: .28em .7em; border-radius: 999px;
+    font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap;
+  }
+  .pill::before { content: ''; width: .5em; height: .5em; border-radius: 50%; background: currentColor; }
+  .pill-aberta { background: var(--st-aberta-bg); color: var(--st-aberta); }
+  .pill-agendada { background: var(--st-andamento-bg); color: var(--st-andamento); }
+  .pill-em_execucao { background: var(--st-execucao-bg); color: var(--st-execucao); }
+  .pill-concluida { background: var(--st-concluida-bg); color: var(--st-concluida); }
+  .pill-cancelada { background: var(--st-cancelada-bg); color: var(--st-cancelada); }
+  .pill-baixa { background: var(--line); color: var(--ink-dim); }
+  .pill-media { background: var(--st-aberta-bg); color: var(--st-aberta); }
+  .pill-alta { background: var(--st-cancelada-bg); color: var(--danger); }
+  .pill-role-pendente { background: var(--line); color: var(--ink-dim); }
+  .pill-role-encarregado { background: var(--st-andamento-bg); color: var(--st-andamento); }
+  .pill-role-executor { background: var(--st-execucao-bg); color: var(--st-execucao); }
+  .pill-role-gestor { background: var(--accent-soft); color: var(--accent); }
+  .pill-role-super_admin { background: var(--ink); color: var(--paper); }
+
+  /* ---------- App shell ---------- */
+  #app { min-height: 100vh; }
+  .shell { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+  .sidebar {
+    background: var(--surface); border-right: 1px solid var(--line);
+    padding: 1.4rem 1rem; display: flex; flex-direction: column; gap: 1.6rem;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand { display: flex; align-items: center; gap: .6rem; padding: 0 .3rem; }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--accent); color: var(--accent-ink);
+    display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; flex: none;
+  }
+  .brand-text { line-height: 1.05; }
+  .brand-text .t1 { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; text-transform: uppercase; letter-spacing: .02em; }
+  .brand-text .t2 { font-size: .68rem; color: var(--ink-dim); text-transform: uppercase; letter-spacing: .06em; }
+  nav.mainnav { display: flex; flex-direction: column; gap: .15rem; flex: 1; }
+  nav.mainnav button {
+    display: flex; align-items: center; gap: .6rem; text-align: left; background: none; border: none;
+    padding: .6rem .7rem; border-radius: 8px; color: var(--ink-dim); font-weight: 600; font-size: .88rem;
+  }
+  nav.mainnav button:hover { background: var(--paper); color: var(--ink); }
+  nav.mainnav button.active { background: var(--accent-soft); color: var(--ink); }
+  nav.mainnav .ic { width: 1.1em; text-align: center; opacity: .85; }
+  .side-foot { border-top: 1px solid var(--line); padding-top: 1rem; font-size: .8rem; color: var(--ink-dim); }
+  .side-foot strong { color: var(--ink); display: block; font-size: .85rem; }
+  .side-foot .rolebadge { margin-top: .4rem; }
+
+  main.content { padding: 2rem 2.4rem 4rem; max-width: 1180px; }
+  .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.6rem; flex-wrap: wrap; }
+  .page-head h1 { font-size: 1.9rem; }
+  .page-head .sub { color: var(--ink-dim); font-size: .92rem; margin-top: .2rem; }
+  .eyebrow { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin-bottom: .3rem; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.8rem; }
+  .stat-tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.1rem; }
+  .stat-tile .n { font-family: var(--font-display); font-weight: 800; font-size: 2.1rem; line-height: 1; }
+  .stat-tile .l { font-size: .78rem; color: var(--ink-dim); text-transform: uppercase; letter-spacing: .04em; margin-top: .4rem; }
+  .stat-tile.accent .n { color: var(--accent); }
+
+  .list { display: flex; flex-direction: column; gap: .7rem; }
+  .ticket {
+    background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--line-strong);
+    border-radius: var(--radius); padding: .95rem 1.1rem; display: flex; flex-direction: column; gap: .55rem;
+  }
+  .ticket.u-alta { border-left-color: var(--danger); }
+  .ticket.u-media { border-left-color: var(--st-aberta); }
+  .ticket-top { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+  .ticket-id { font-family: var(--font-mono); font-size: .8rem; color: var(--ink-dim); }
+  .ticket-title { font-weight: 700; font-size: 1rem; }
+  .ticket-unit { color: var(--ink-dim); font-size: .85rem; }
+  .ticket-desc { font-size: .9rem; color: var(--ink); }
+  .ticket-meta { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+  .ticket-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .3rem; }
+
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-dim); border-bottom: 1px solid var(--line-strong); padding: .5em .6em; }
+  td { padding: .65em .6em; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  .table-wrap table { min-width: 560px; }
+  .table-wrap select { width: auto; padding: .3em .5em; }
+
+  .toolbar { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.1rem; }
+  .toolbar .grow { flex: 1 1 220px; }
+  .empty { padding: 2.4rem 1rem; text-align: center; color: var(--ink-dim); border: 1px dashed var(--line-strong); border-radius: var(--radius); }
+  .empty .display { font-size: 1.2rem; color: var(--ink); margin-bottom: .4rem; }
+
+  .modal-back { position: fixed; inset: 0; background: rgba(20,18,10,.45); display: flex; align-items: center; justify-content: center; padding: 1.2rem; z-index: 50; }
+  .modal { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line); box-shadow: var(--shadow); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; padding: 1.5rem; }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .modal-head h2 { font-size: 1.2rem; }
+  .modal-close { background: none; border: none; font-size: 1.4rem; line-height: 1; color: var(--ink-dim); padding: .2rem .4rem; }
+
+  .toast-wrap { position: fixed; bottom: 1.2rem; right: 1.2rem; display: flex; flex-direction: column; gap: .5rem; z-index: 80; max-width: 320px; }
+  .toast { background: var(--ink); color: var(--paper); padding: .7em 1em; border-radius: 8px; font-size: .87rem; box-shadow: var(--shadow); }
+  .toast.err { background: var(--danger); color: #fff; }
+
+  .timeline { display: flex; flex-direction: column; gap: 0; margin-top: .5rem; }
+  .tl-item { display: flex; gap: .8rem; padding: .5rem 0; border-left: 2px solid var(--line-strong); margin-left: .35rem; padding-left: 1rem; position: relative; }
+  .tl-item::before { content: ''; position: absolute; left: -6px; top: .65rem; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .tl-item:last-child { border-left-color: transparent; }
+  .tl-when { font-family: var(--font-mono); font-size: .74rem; color: var(--ink-dim); }
+
+  .bars { display: flex; flex-direction: column; gap: .6rem; }
+  .bar-row { display: grid; grid-template-columns: 130px 1fr 76px; align-items: center; gap: .7rem; font-size: .85rem; }
+  .bar-track { background: var(--line); border-radius: 5px; height: 12px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 5px; }
+  .bar-val { text-align: right; font-family: var(--font-mono); color: var(--ink-dim); }
+
+  .insumo-row { display: flex; gap: .6rem; align-items: center; padding: .4rem 0; border-bottom: 1px solid var(--line); font-size: .85rem; }
+  .insumo-row:last-child { border-bottom: none; }
+  .insumo-add { display: flex; gap: .5rem; margin-top: .6rem; flex-wrap: wrap; }
+  .insumo-add select { flex: 2 1 140px; }
+  .insumo-add input { flex: 1 1 70px; }
+
+  .stars { display: flex; gap: .3rem; justify-content: center; margin: 1rem 0; font-size: 2.1rem; }
+  .stars button { background: none; border: none; padding: 0; color: var(--line-strong); line-height: 1; }
+  .stars button.on { color: var(--accent); }
+
+  /* ---------- Public (resident) page ---------- */
+  .public-wrap {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 28px 28px; background-position: center;
+  }
+  .public-card { width: 100%; max-width: 480px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 2rem; }
+  .public-head { text-align: center; margin-bottom: 1.4rem; }
+  .public-head .tag { display: inline-block; background: var(--accent); color: var(--accent-ink); font-family: var(--font-mono); font-size: .74rem; font-weight: 600; padding: .25em .6em; border-radius: 5px; margin-bottom: .8rem; }
+  .public-head h1 { font-size: 1.5rem; }
+  .unit-chip { display: inline-flex; align-items: center; gap: .5rem; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: .5em .9em; font-family: var(--font-mono); font-size: .9rem; margin-top: .6rem; }
+  .urg-choice { display: flex; gap: .5rem; }
+  .urg-choice label { flex: 1; }
+  .urg-choice input { position: absolute; opacity: 0; pointer-events: none; }
+  .urg-opt { display: block; text-align: center; border: 1px solid var(--line-strong); border-radius: 8px; padding: .6em .4em; font-size: .82rem; font-weight: 600; color: var(--ink-dim); }
+  .urg-choice input:checked + .urg-opt { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+  .success-box { text-align: center; padding: 1rem 0; }
+  .success-box .n { font-family: var(--font-display); font-size: 2.4rem; font-weight: 800; color: var(--accent); }
+
+  /* ---------- Login / landing ---------- */
+  .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .auth-card { width: 100%; max-width: 400px; }
+  .auth-tabs { display: flex; gap: .4rem; margin-bottom: 1.2rem; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: .25rem; }
+  .auth-tabs button { flex: 1; background: none; border: none; padding: .55em; border-radius: 6px; font-weight: 600; font-size: .86rem; color: var(--ink-dim); }
+  .auth-tabs button.active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+  .hint { font-size: .8rem; color: var(--ink-dim); margin-top: .2rem; }
+  .err-box { background: var(--st-cancelada-bg); color: var(--danger); border-radius: 8px; padding: .7em .9em; font-size: .85rem; margin-bottom: 1rem; }
+
+  .qr-box { text-align: center; }
+  .qr-box .render { display: inline-block; background: #fff; padding: 12px; border-radius: 8px; margin: .8rem 0; }
+  .qr-link { font-family: var(--font-mono); font-size: .78rem; word-break: break-all; background: var(--paper); padding: .6em .7em; border-radius: 6px; display: block; margin-top: .6rem; }
+
+  .switch { display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; }
+  .switch input { width: 34px; height: 20px; appearance: none; background: var(--line-strong); border-radius: 999px; position: relative; outline-offset: 3px; }
+  .switch input:checked { background: var(--accent); }
+  .switch input::after { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: left .15s; }
+  .switch input:checked::after { left: 16px; }
+
+  .radio-inline { display: flex; align-items: center; gap: .4em; font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--ink); font-size: .88rem; }
+  .radio-inline input { width: auto; }
+
+  .topbar-mobile { display: none; }
+
+  @media (max-width: 880px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { position: fixed; bottom: 0; left: 0; right: 0; top: auto; height: auto; width: 100%;
+      flex-direction: row; align-items: center; padding: .5rem .6rem; z-index: 40; border-right: none; border-top: 1px solid var(--line);
+      overflow-x: auto; }
+    .sidebar .brand, .sidebar .side-foot, .sidebar .equipe-switcher { display: none; }
+    nav.mainnav { flex-direction: row; flex: none; width: max-content; min-width: 100%; justify-content: space-between; gap: .2rem; }
+    nav.mainnav button { flex: 0 0 auto; flex-direction: column; font-size: .64rem; padding: .4rem .5rem; gap: .2rem; white-space: nowrap; }
+    main.content { padding: 1.2rem 1rem 6rem; }
+    .topbar-mobile { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1rem; border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 30; }
+    .bar-row { grid-template-columns: 96px 1fr 64px; }
+    .toast-wrap { bottom: 4.6rem; right: .8rem; left: .8rem; max-width: none; align-items: stretch; }
+  }
+
+  @media print {
+    body * { visibility: hidden; }
+    #print-area, #print-area * { visibility: visible; }
+    #print-area { position: absolute; top: 0; left: 0; width: 100%; text-align: center; padding-top: 2rem; }
+  }
+</style>
+</head>
+<body>
+<div id="app"><div style="min-height:100vh;display:flex;align-items:center;justify-content:center;color:var(--ink-dim);font-family:var(--font-mono);font-size:.85rem;">carregando…</div></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ======================= CONFIG ======================= */
+var SUPABASE_URL = "https://monvvtgqppwskpfiiubb.supabase.co";
+var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vbnZ2dGdxcHB3c2twZmlpdWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwODI0ODgsImV4cCI6MjEwNDY1ODQ4OH0.Yelfap0TJnWGvlsIvZ3Eaj50D5ghW-XjtDCvM58jaog";
+var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+var VAPID_PUBLIC_KEY = "BAfUgDD0IDCs5Q2I2by_kIMONEvIwlzDFzvcDXo4ChUHnZH6aUlFn3oSKirISpuZi7Bl4_sgz2yUt78BVPeZ90c";
+
+var STATUS_LABEL = { aberta: "Aberta", agendada: "Agendada", em_execucao: "Em execução", concluida: "Concluída", cancelada: "Cancelada" };
+var URG_LABEL = { baixa: "Baixa", media: "Média", alta: "Alta" };
+var ROLE_LABEL = { pendente: "Pendente", encarregado: "Encarregado", executor: "Executor", gestor: "Gestor", super_admin: "Super Admin" };
+
+function getNavItems(role) {
+  if (role === "executor") return [
+    { id: "meus_chamados", label: "Meus Chamados", ic: "▣" },
+    { id: "historico", label: "Histórico", ic: "▤" },
+    { id: "notificacoes", label: "Notificações", ic: "🔔" }
+  ];
+  if (role === "encarregado") return [
+    { id: "dashboard", label: "Dashboard", ic: "◆" },
+    { id: "servicos", label: "Serviços", ic: "▣" },
+    { id: "unidades", label: "Unidades", ic: "▦" },
+    { id: "prestadores", label: "Prestadores", ic: "◈" },
+    { id: "insumos", label: "Insumos", ic: "⛭" },
+    { id: "historico", label: "Histórico", ic: "▤" },
+    { id: "notificacoes", label: "Notificações", ic: "🔔" }
+  ];
+  if (role === "super_admin") return [
+    { id: "equipes", label: "Equipes", ic: "▧" },
+    { id: "dashboard", label: "Dashboard", ic: "◆" },
+    { id: "servicos", label: "Serviços", ic: "▣" },
+    { id: "unidades", label: "Unidades", ic: "▦" },
+    { id: "prestadores", label: "Prestadores", ic: "◈" },
+    { id: "insumos", label: "Insumos", ic: "⛭" },
+    { id: "equipe", label: "Equipe", ic: "☺" },
+    { id: "historico", label: "Histórico", ic: "▤" },
+    { id: "relatorios", label: "Relatórios", ic: "▥" },
+    { id: "config", label: "Config.", ic: "⚙" }
+  ];
+  return [
+    { id: "dashboard", label: "Dashboard", ic: "◆" },
+    { id: "servicos", label: "Serviços", ic: "▣" },
+    { id: "unidades", label: "Unidades", ic: "▦" },
+    { id: "prestadores", label: "Prestadores", ic: "◈" },
+    { id: "insumos", label: "Insumos", ic: "⛭" },
+    { id: "equipe", label: "Equipe", ic: "☺" },
+    { id: "historico", label: "Histórico", ic: "▤" },
+    { id: "relatorios", label: "Relatórios", ic: "▥" },
+    { id: "config", label: "Config.", ic: "⚙" }
+  ];
+}
+function defaultViewFor(role) {
+  if (role === "executor") return "meus_chamados";
+  if (role === "super_admin") return "equipes";
+  return "dashboard";
+}
+function equipeInsertExtra() { return state.profile.role === "super_admin" ? { equipe_id: state.currentEquipeId } : {}; }
+
+/* ======================= HELPERS ======================= */
+function $(sel, ctx) { return (ctx || document).querySelector(sel); }
+function $all(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
+function esc(s) {
+  if (s === null || s === undefined) return "";
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+function osCode(n) { return "OS-" + String(n).padStart(5, "0"); }
+function fmtDate(iso) {
+  if (!iso) return "—";
+  var d = new Date(iso);
+  return d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+}
+function fmtDateShort(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("pt-BR");
+}
+function fmtDuracao(ms) {
+  if (!ms || ms < 0) return "—";
+  var h = ms / 3600000;
+  if (h < 1) return Math.round(ms / 60000) + " min";
+  if (h < 48) return h.toFixed(1).replace(".", ",") + " h";
+  return (h / 24).toFixed(1).replace(".", ",") + " dias";
+}
+function brl(n) { return (n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+function toast(msg, isErr) {
+  var wrap = $("#toastWrap");
+  var t = document.createElement("div");
+  t.className = "toast" + (isErr ? " err" : "");
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(function () { t.remove(); }, 4200);
+}
+function qp() { return new URLSearchParams(location.search); }
+
+/* ======================= PUSH (WEB PUSH) ======================= */
+var PUSH_ROLES = ["encarregado", "gestor", "executor"];
+function pushElegivel(role) { return PUSH_ROLES.indexOf(role) !== -1; }
+function pushSuportado() { return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window; }
+function urlBase64ToUint8Array(base64String) {
+  var padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  var base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  var rawData = atob(base64);
+  var outputArray = new Uint8Array(rawData.length);
+  for (var i = 0; i < rawData.length; i++) outputArray[i] = rawData.charCodeAt(i);
+  return outputArray;
+}
+function registrarServiceWorker() {
+  if (!pushSuportado()) return Promise.reject(new Error("Este navegador não suporta notificações push."));
+  return navigator.serviceWorker.register("./sw.js").then(function () { return navigator.serviceWorker.ready; });
+}
+function pushStatus() {
+  if (!pushSuportado()) return Promise.resolve("unsupported");
+  if (Notification.permission === "denied") return Promise.resolve("denied");
+  return navigator.serviceWorker.getRegistration("./sw.js").then(function (reg) {
+    if (!reg) return "not-subscribed";
+    return reg.pushManager.getSubscription().then(function (sub) { return sub ? "subscribed" : "not-subscribed"; });
+  });
+}
+function ativarPush() {
+  return registrarServiceWorker()
+    .then(function (reg) {
+      return Notification.requestPermission().then(function (perm) {
+        if (perm !== "granted") throw new Error("Permissão de notificação negada.");
+        return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) });
+      });
+    })
+    .then(function (sub) {
+      var json = sub.toJSON();
+      return sb.from("push_subscriptions").upsert(
+        { user_id: state.session.user.id, endpoint: json.endpoint, p256dh: json.keys.p256dh, auth: json.keys.auth, user_agent: navigator.userAgent },
+        { onConflict: "user_id,endpoint" }
+      );
+    })
+    .then(function (res) {
+      if (res.error) throw new Error(res.error.message);
+      return true;
+    });
+}
+function desativarPush() {
+  return navigator.serviceWorker.getRegistration("./sw.js").then(function (reg) {
+    if (!reg) return;
+    return reg.pushManager.getSubscription().then(function (sub) {
+      if (!sub) return;
+      var endpoint = sub.endpoint;
+      return sub.unsubscribe().then(function () {
+        return sb.from("push_subscriptions").delete().eq("user_id", state.session.user.id).eq("endpoint", endpoint);
+      });
+    });
+  });
+}
+
+/* ======================= STATE ======================= */
+var state = {
+  session: null,
+  profile: null,
+  view: "dashboard",
+  currentEquipeId: null,
+  data: { unidades: [], prestadores: [], categorias: [], solicitacoes: [], insumos: [], profiles: [], solIns: [], equipes: [], convites: [] },
+  loaded: false,
+  channel: null
+};
+
+/* ======================= APP BOOT ======================= */
+function boot() {
+  var params = qp();
+  if (params.has("u")) { renderPublicForm(params); return; }
+  if (params.has("av")) { renderAvaliacaoPublica(params.get("av")); return; }
+  if (params.has("convite")) { renderConviteGestor(params.get("convite")); return; }
+  sb.auth.getSession().then(function (res) {
+    state.session = res.data.session;
+    if (state.session) { loadProfileAndEnter(); } else { renderAuth(); }
+  });
+  sb.auth.onAuthStateChange(function (event, session) {
+    state.session = session;
+    if (event === "SIGNED_OUT") { teardownRealtime(); renderAuth(); }
+  });
+}
+
+function loadProfileAndEnter() {
+  sb.from("profiles").select("*").eq("user_id", state.session.user.id).maybeSingle().then(function (res) {
+    if (res.error || !res.data) {
+      toast("Não foi possível carregar sua conta.", true);
+      sb.auth.signOut();
+      return;
+    }
+    state.profile = res.data;
+    if (state.profile.role === "pendente") { renderPendingApproval(); return; }
+    state.view = defaultViewFor(state.profile.role);
+    enterApp();
+  });
+}
+
+/* ======================= PUBLIC: NOVA SOLICITAÇÃO (via QR) ======================= */
+function renderPublicForm(params) {
+  var unidadeId = params.get("u") || "";
+  var bloco = params.get("b") || "";
+  var numero = params.get("n") || "";
+  var app = $("#app");
+  app.innerHTML =
+    '<div class="public-wrap"><div class="public-card">' +
+      '<div class="public-head">' +
+        '<span class="tag">CHAMADO DE MANUTENÇÃO</span>' +
+        "<h1>Nova solicitação</h1>" +
+        '<div class="unit-chip">🏷 Bloco ' + esc(bloco) + " · Apto " + esc(numero) + "</div>" +
+      "</div>" +
+      '<form id="pubForm">' +
+        '<div class="field"><label>Categoria do problema</label><select id="pf_categoria" required><option value="">Selecione…</option></select></div>' +
+        '<div class="field"><label>Descreva o que está acontecendo</label><textarea id="pf_desc" required placeholder="Ex.: torneira da cozinha vazando embaixo da pia"></textarea></div>' +
+        '<div class="field"><label>Urgência</label>' +
+          '<div class="urg-choice">' +
+            '<label><input type="radio" name="urg" value="baixa"><span class="urg-opt">Baixa</span></label>' +
+            '<label><input type="radio" name="urg" value="media" checked><span class="urg-opt">Média</span></label>' +
+            '<label><input type="radio" name="urg" value="alta"><span class="urg-opt">Alta</span></label>' +
+          "</div>" +
+        "</div>" +
+        '<div class="field-row">' +
+          '<div class="field"><label>Seu nome (opcional)</label><input type="text" id="pf_nome" placeholder="Quem está solicitando"></div>' +
+          '<div class="field"><label>Telefone (opcional)</label><input type="tel" id="pf_contato" placeholder="(00) 00000-0000"></div>' +
+        "</div>" +
+        '<button class="btn btn-primary" type="submit" style="width:100%;padding:.8em;" id="pf_submit">Enviar solicitação</button>' +
+      "</form>" +
+    "</div></div>";
+
+  sb.rpc("get_categorias_publicas", { p_unidade_id: unidadeId }).then(function (res) {
+    var sel = $("#pf_categoria");
+    (res.data || []).forEach(function (c) {
+      var o = document.createElement("option");
+      o.value = c.id; o.textContent = c.nome; o.dataset.nome = c.nome;
+      sel.appendChild(o);
+    });
+  });
+
+  $("#pubForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var btn = $("#pf_submit");
+    var catSel = $("#pf_categoria");
+    var catNome = catSel.options[catSel.selectedIndex] ? catSel.options[catSel.selectedIndex].dataset.nome : "";
+    var urg = $('input[name="urg"]:checked').value;
+    var payload = {
+      unidade_id: unidadeId || null,
+      bloco: bloco, numero: numero,
+      categoria_id: catSel.value || null,
+      categoria_nome: catNome || "Outros",
+      descricao: $("#pf_desc").value.trim(),
+      urgencia: urg,
+      solicitante_nome: $("#pf_nome").value.trim() || null,
+      solicitante_contato: $("#pf_contato").value.trim() || null
+    };
+    if (!payload.descricao) { toast("Descreva o problema antes de enviar.", true); return; }
+    btn.disabled = true; btn.textContent = "Enviando…";
+    sb.from("solicitacoes").insert(payload).then(function (res) {
+      if (res.error) {
+        toast("Não foi possível enviar: " + res.error.message, true);
+        btn.disabled = false; btn.textContent = "Enviar solicitação";
+        return;
+      }
+      $(".public-card").innerHTML =
+        '<div class="success-box">' +
+          '<div class="n">✓</div>' +
+          "<h2 class=\"display\" style=\"font-size:1.3rem;margin-bottom:.5rem;\">Solicitação enviada</h2>" +
+          '<p style="color:var(--ink-dim);font-size:.92rem;">A equipe de manutenção foi notificada. Bloco ' + esc(bloco) + ", apto " + esc(numero) + '.</p>' +
+          '<p style="color:var(--ink-dim);font-size:.82rem;margin-top:.6rem;">Você pode receber uma mensagem para avaliar o atendimento assim que o serviço for concluído.</p>' +
+        "</div>";
+    });
+  });
+}
+
+/* ======================= PUBLIC: AVALIAÇÃO (link pós-conclusão) ======================= */
+function renderAvaliacaoPublica(token) {
+  var app = $("#app");
+  app.innerHTML = '<div class="public-wrap"><div class="public-card" id="avCard"><p class="hint">Carregando…</p></div></div>';
+  sb.rpc("get_avaliacao_info", { p_token: token }).then(function (res) {
+    var card = $("#avCard");
+    var info = res.data && res.data[0];
+    if (res.error || !info) {
+      card.innerHTML = '<div class="success-box"><h2 class="display" style="font-size:1.2rem;">Link inválido</h2><p class="hint">Esta avaliação não foi encontrada.</p></div>';
+      return;
+    }
+    if (info.ja_avaliado) {
+      card.innerHTML = '<div class="success-box"><div class="n">✓</div><h2 class="display" style="font-size:1.2rem;margin-bottom:.5rem;">Obrigado!</h2><p class="hint">Sua avaliação para este chamado já foi registrada.</p></div>';
+      return;
+    }
+    var nota = 0;
+    card.innerHTML =
+      '<div class="public-head"><span class="tag">AVALIAÇÃO DO SERVIÇO</span><h1>Como foi o atendimento?</h1>' +
+      '<div class="unit-chip">🏷 ' + esc(info.categoria_nome) + " · Bloco " + esc(info.bloco) + " · Apto " + esc(info.numero) + "</div></div>" +
+      '<div class="stars" id="avStars">' + [1, 2, 3, 4, 5].map(function (n) { return '<button type="button" data-n="' + n + '">★</button>'; }).join("") + "</div>" +
+      '<div class="field"><label>Comentário (opcional)</label><textarea id="av_coment" placeholder="Conte como foi o serviço"></textarea></div>' +
+      '<button class="btn btn-primary" id="av_send" style="width:100%;padding:.8em;">Enviar avaliação</button>';
+    var starBtns = $all("#avStars button");
+    starBtns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        nota = parseInt(b.dataset.n, 10);
+        starBtns.forEach(function (x) { x.classList.toggle("on", parseInt(x.dataset.n, 10) <= nota); });
+      });
+    });
+    $("#av_send").addEventListener("click", function () {
+      if (!nota) { toast("Escolha de 1 a 5 estrelas.", true); return; }
+      sb.rpc("enviar_avaliacao", { p_token: token, p_nota: nota, p_comentario: $("#av_coment").value.trim() || null }).then(function (res2) {
+        if (res2.error) { toast("Não foi possível enviar: " + res2.error.message, true); return; }
+        card.innerHTML = '<div class="success-box"><div class="n">✓</div><h2 class="display" style="font-size:1.2rem;margin-bottom:.5rem;">Avaliação enviada</h2><p class="hint">Obrigado por avaliar o serviço!</p></div>';
+      });
+    });
+  });
+}
+
+/* ======================= PUBLIC: CONVITE DE GESTOR (nova equipe) ======================= */
+function renderConviteGestor(token) {
+  var app = $("#app");
+  app.innerHTML = '<div class="auth-wrap"><div class="auth-card" id="cvCard"><p class="hint">Carregando…</p></div></div>';
+  sb.rpc("get_convite_info", { p_token: token }).then(function (res) {
+    var card = $("#cvCard");
+    var info = res.data && res.data[0];
+    if (res.error || !info) {
+      card.innerHTML = '<div class="card" style="text-align:center;"><h1 style="font-size:1.2rem;">Convite inválido</h1><p class="hint">Este link de convite não foi encontrado.</p></div>';
+      return;
+    }
+    if (!info.valido) {
+      card.innerHTML = '<div class="card" style="text-align:center;"><h1 style="font-size:1.2rem;">Convite já utilizado</h1><p class="hint">Este convite já foi usado para criar uma conta. Fale com quem enviou o link se isso não deveria ter acontecido.</p></div>';
+      return;
+    }
+    card.innerHTML =
+      '<div class="public-head" style="margin-bottom:1.4rem;">' +
+        '<span class="tag">CONVITE DE GESTOR</span>' +
+        "<h1>Bem-vindo(a)!</h1>" +
+        '<p style="color:var(--ink-dim);font-size:.88rem;margin-top:.4rem;">Você foi convidado(a) para ser Gestor(a) de <strong>' + esc(info.equipe_nome) + "</strong>. Defina uma senha para acessar.</p>" +
+      "</div>" +
+      '<div class="card">' +
+        '<div id="cvErr" style="display:none;" class="err-box"></div>' +
+        '<form id="cvForm">' +
+          '<div class="field"><label>Seu nome</label><input type="text" id="cv_nome" value="' + esc(info.nome || "") + '" required></div>' +
+          '<div class="field"><label>E-mail</label><input type="email" value="' + esc(info.email) + '" disabled></div>' +
+          '<div class="field"><label>Crie uma senha</label><input type="password" id="cv_pass" required minlength="6" autocomplete="new-password"></div>' +
+          '<button class="btn btn-primary" type="submit" style="width:100%;padding:.75em;">Criar conta e acessar</button>' +
+        "</form>" +
+      "</div>";
+    $("#cvForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var btn = e.target.querySelector("button");
+      btn.disabled = true;
+      sb.auth.signUp({
+        email: info.email,
+        password: $("#cv_pass").value,
+        options: { data: { nome: $("#cv_nome").value.trim(), convite_token: token } }
+      }).then(function (res2) {
+        if (res2.error) {
+          var b = $("#cvErr"); b.textContent = traduzErro(res2.error.message); b.style.display = "block"; btn.disabled = false;
+          return;
+        }
+        if (res2.data.session) { state.session = res2.data.session; loadProfileAndEnter(); }
+        else { toast("Conta criada! Faça login para continuar."); location.href = location.origin + location.pathname; }
+      });
+    });
+  });
+}
+
+/* ======================= AUTH (EQUIPE) ======================= */
+function renderAuth() {
+  var app = $("#app");
+  app.innerHTML =
+    '<div class="auth-wrap"><div class="auth-card">' +
+      '<div class="public-head" style="margin-bottom:1.4rem;">' +
+        '<span class="tag">MANUTENÇÕES PREDIAIS</span>' +
+        "<h1>Acesso da equipe</h1>" +
+        '<p style="color:var(--ink-dim);font-size:.88rem;margin-top:.4rem;">Encarregados, executores e gestores da manutenção.</p>' +
+      "</div>" +
+      '<div class="card">' +
+        '<div class="auth-tabs">' +
+          '<button id="tabLogin" class="active">Entrar</button>' +
+          '<button id="tabSignup">Criar conta</button>' +
+        "</div>" +
+        '<div id="authErr" style="display:none;" class="err-box"></div>' +
+        '<form id="loginForm">' +
+          '<div class="field"><label>E-mail</label><input type="email" id="lg_email" required autocomplete="email"></div>' +
+          '<div class="field"><label>Senha</label><input type="password" id="lg_pass" required autocomplete="current-password"></div>' +
+          '<button class="btn btn-primary" type="submit" style="width:100%;padding:.75em;">Entrar</button>' +
+        "</form>" +
+        '<form id="signupForm" style="display:none;">' +
+          '<div class="field"><label>Seu nome</label><input type="text" id="su_nome" required></div>' +
+          '<div class="field"><label>E-mail</label><input type="email" id="su_email" required autocomplete="email"></div>' +
+          '<div class="field"><label>Senha</label><input type="password" id="su_pass" required minlength="6" autocomplete="new-password"></div>' +
+          '<div class="field"><label>Código de convite da equipe</label><input type="text" id="su_code" required placeholder="Fornecido pelo gestor"></div>' +
+          '<p class="hint" style="margin-bottom:1rem;">Depois de criar a conta, um gestor precisa liberar sua função (Encarregado, Executor ou Gestor) antes do acesso completo.</p>' +
+          '<button class="btn btn-primary" type="submit" style="width:100%;padding:.75em;">Criar conta</button>' +
+        "</form>" +
+      "</div>" +
+    "</div></div>";
+
+  function showErr(msg) { var b = $("#authErr"); b.textContent = msg; b.style.display = "block"; }
+  function hideErr() { $("#authErr").style.display = "none"; }
+
+  $("#tabLogin").addEventListener("click", function () {
+    this.classList.add("active"); $("#tabSignup").classList.remove("active");
+    $("#loginForm").style.display = "block"; $("#signupForm").style.display = "none"; hideErr();
+  });
+  $("#tabSignup").addEventListener("click", function () {
+    this.classList.add("active"); $("#tabLogin").classList.remove("active");
+    $("#signupForm").style.display = "block"; $("#loginForm").style.display = "none"; hideErr();
+  });
+
+  $("#loginForm").addEventListener("submit", function (e) {
+    e.preventDefault(); hideErr();
+    sb.auth.signInWithPassword({ email: $("#lg_email").value.trim(), password: $("#lg_pass").value }).then(function (res) {
+      if (res.error) { showErr(traduzErro(res.error.message)); return; }
+      state.session = res.data.session;
+      loadProfileAndEnter();
+    });
+  });
+
+  $("#signupForm").addEventListener("submit", function (e) {
+    e.preventDefault(); hideErr();
+    sb.auth.signUp({
+      email: $("#su_email").value.trim(),
+      password: $("#su_pass").value,
+      options: { data: { nome: $("#su_nome").value.trim(), invite_code: $("#su_code").value.trim() } }
+    }).then(function (res) {
+      if (res.error) { showErr(traduzErro(res.error.message)); return; }
+      if (res.data.session) { state.session = res.data.session; loadProfileAndEnter(); }
+      else { toast("Conta criada! Confirme o acesso e entre."); $("#tabLogin").click(); }
+    });
+  });
+}
+
+function traduzErro(msg) {
+  if (!msg) return "Não foi possível concluir. Tente novamente.";
+  if (/invalid login credentials/i.test(msg)) return "E-mail ou senha incorretos.";
+  if (/código de convite inválido/i.test(msg)) return "Código de convite inválido.";
+  if (/already registered|already exists/i.test(msg)) return "Já existe uma conta com esse e-mail.";
+  return msg;
+}
+
+/* ======================= PENDENTE (sem função definida) ======================= */
+function renderPendingApproval() {
+  var app = $("#app");
+  app.innerHTML =
+    '<div class="auth-wrap"><div class="auth-card">' +
+      '<div class="card" style="text-align:center;">' +
+        '<div class="eyebrow">Conta criada</div>' +
+        '<h1 style="font-size:1.3rem;margin-bottom:.6rem;">Aguardando liberação</h1>' +
+        '<p style="color:var(--ink-dim);font-size:.9rem;">Olá, ' + esc(state.profile.nome || state.profile.email) + '. Sua conta foi criada, mas um gestor ainda precisa definir sua função (Encarregado, Executor ou Gestor) antes de liberar o acesso.</p>' +
+        '<div style="display:flex;gap:.6rem;margin-top:1.2rem;"><button class="btn" id="pa_check" style="flex:1;">Verificar novamente</button><button class="btn btn-ghost" id="pa_out" style="flex:1;">Sair</button></div>' +
+      "</div>" +
+    "</div></div>";
+  $("#pa_check").addEventListener("click", loadProfileAndEnter);
+  $("#pa_out").addEventListener("click", function () { sb.auth.signOut(); });
+}
+
+/* ======================= APP SHELL (EQUIPE) ======================= */
+function enterApp() {
+  state.currentEquipeId = state.profile.equipe_id || null;
+  Promise.all([
+    sb.from("equipes").select("*").order("nome"),
+    sb.from("convites_gestor").select("*")
+  ]).then(function (results) {
+    state.data.equipes = results[0].data || [];
+    state.data.convites = results[1].data || [];
+    if (!state.currentEquipeId && state.profile.role === "super_admin" && state.data.equipes.length) {
+      state.currentEquipeId = state.data.equipes[0].id;
+    }
+    loadEquipeData(function () {
+      renderShell();
+      setupRealtime();
+    });
+  });
+}
+
+function loadEquipeData(cb) {
+  var eqId = state.currentEquipeId;
+  if (!eqId) {
+    state.data.unidades = []; state.data.prestadores = []; state.data.categorias = [];
+    state.data.solicitacoes = []; state.data.insumos = []; state.data.profiles = []; state.data.solIns = [];
+    state.loaded = true;
+    if (cb) cb();
+    return;
+  }
+  Promise.all([
+    sb.from("unidades").select("*").eq("equipe_id", eqId).order("bloco").order("numero"),
+    sb.from("prestadores").select("*").eq("equipe_id", eqId).order("nome"),
+    sb.from("categorias_servico").select("*").eq("equipe_id", eqId).order("nome"),
+    sb.from("solicitacoes").select("*").eq("equipe_id", eqId).order("criado_em", { ascending: false }),
+    sb.from("insumos").select("*").eq("equipe_id", eqId).order("nome"),
+    sb.from("profiles").select("*").eq("equipe_id", eqId).order("criado_em"),
+    sb.from("solicitacao_insumos").select("*").eq("equipe_id", eqId)
+  ]).then(function (results) {
+    state.data.unidades = results[0].data || [];
+    state.data.prestadores = results[1].data || [];
+    state.data.categorias = results[2].data || [];
+    state.data.solicitacoes = results[3].data || [];
+    state.data.insumos = results[4].data || [];
+    state.data.profiles = results[5].data || [];
+    state.data.solIns = results[6].data || [];
+    state.loaded = true;
+    if (cb) cb();
+  });
+}
+
+function onEquipeSwitch(newId) {
+  state.currentEquipeId = newId || null;
+  loadEquipeData(function () { renderShell(); setupRealtime(); });
+}
+
+function setupRealtime() {
+  teardownRealtime();
+  state.channel = sb
+    .channel("solicitacoes-live")
+    .on("postgres_changes", { event: "*", schema: "public", table: "solicitacoes" }, function () {
+      if (!state.currentEquipeId) return;
+      sb.from("solicitacoes").select("*").eq("equipe_id", state.currentEquipeId).order("criado_em", { ascending: false }).then(function (res) {
+        state.data.solicitacoes = res.data || [];
+        if (["dashboard", "servicos", "historico", "relatorios", "meus_chamados"].indexOf(state.view) !== -1) renderView();
+      });
+    })
+    .subscribe();
+}
+function teardownRealtime() { if (state.channel) { sb.removeChannel(state.channel); state.channel = null; } }
+
+function renderShell() {
+  var app = $("#app");
+  var role = state.profile.role;
+  var switcherHtml = "";
+  if (role === "super_admin") {
+    var opts = state.data.equipes.map(function (e) {
+      return '<option value="' + e.id + '"' + (e.id === state.currentEquipeId ? " selected" : "") + ">" + esc(e.nome) + (e.ativo ? "" : " (inativa)") + "</option>";
+    }).join("");
+    switcherHtml = '<div class="equipe-switcher" style="padding:0 .3rem;">' +
+      '<label style="margin-bottom:.25rem;">Visualizando</label>' +
+      '<select id="equipeSwitch" style="padding:.4em .5em;"><option value="">— nenhuma —</option>' + opts + "</select>" +
+      "</div>";
+  }
+  app.innerHTML =
+    '<div class="shell">' +
+      '<aside class="sidebar">' +
+        '<div class="brand"><div class="brand-mark">M</div><div class="brand-text"><div class="t1">Manutenções</div><div class="t2">Gestão Predial</div></div></div>' +
+        switcherHtml +
+        '<nav class="mainnav" id="mainnav"></nav>' +
+        '<div class="side-foot"><strong>' + esc(state.profile.nome || state.profile.email) + '</strong>' +
+          '<span class="pill rolebadge pill-role-' + role + '">' + ROLE_LABEL[role] + "</span></div>" +
+      "</aside>" +
+      '<main class="content" id="content"></main>' +
+    "</div>";
+
+  var items = getNavItems(role);
+  var nav = $("#mainnav");
+  items.forEach(function (item) {
+    var b = document.createElement("button");
+    b.innerHTML = '<span class="ic">' + item.ic + "</span><span>" + item.label + "</span>";
+    b.className = item.id === state.view ? "active" : "";
+    b.addEventListener("click", function () { state.view = item.id; renderShell(); });
+    nav.appendChild(b);
+  });
+  if (role === "super_admin") {
+    var sw = $("#equipeSwitch");
+    if (sw) sw.addEventListener("change", function () { onEquipeSwitch(sw.value || null); });
+  }
+  renderView();
+}
+
+function setView(v) { state.view = v; renderShell(); }
+
+function renderView() {
+  var c = $("#content");
+  if (!c) return;
+  if (state.view === "equipes") return renderEquipesPlataforma(c);
+  if (state.view === "dashboard") return renderDashboard(c);
+  if (state.view === "servicos") return renderServicos(c);
+  if (state.view === "meus_chamados") return renderMeusChamados(c);
+  if (state.view === "unidades") return renderUnidades(c);
+  if (state.view === "prestadores") return renderPrestadores(c);
+  if (state.view === "insumos") return renderInsumos(c);
+  if (state.view === "equipe") return renderEquipe(c);
+  if (state.view === "historico") return renderHistorico(c);
+  if (state.view === "relatorios") return renderRelatorios(c);
+  if (state.view === "config") return renderConfig(c);
+  if (state.view === "notificacoes") return renderNotificacoes(c);
+}
+
+/* ---------- NOTIFICAÇÕES (encarregado / executor, que não têm tela de Config) ---------- */
+function renderNotificacoes(c) {
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Sistema</div><h1>Notificações</h1></div></div>' +
+    '<div class="card" style="max-width:520px;">' +
+      '<div class="eyebrow">Notificações no navegador</div>' +
+      '<p class="hint" id="pushHint">Verificando status…</p>' +
+      '<button class="btn" id="pushToggleBtn" style="margin-top:.6rem;" disabled>Aguarde…</button>' +
+    "</div>";
+  renderPushCard();
+}
+
+/* ---------- EQUIPES (plataforma — super_admin) ---------- */
+function renderEquipesPlataforma(c) {
+  var equipes = state.data.equipes;
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Plataforma</div><h1>Equipes</h1><div class="sub">' + equipes.length + " equipe(s) cadastrada(s).</div></div>" +
+    '<button class="btn btn-primary" id="btnNovaEquipe">+ Nova equipe</button></div>' +
+    '<div class="list" id="eqPlatList"></div>';
+  var list = $("#eqPlatList", c);
+  if (!equipes.length) {
+    list.innerHTML = '<div class="empty"><div class="display">Nenhuma equipe ainda</div>Crie a primeira equipe para começar a atender um prédio.</div>';
+  } else {
+    equipes.forEach(function (e) {
+      var pendente = state.data.convites.filter(function (cv) { return cv.equipe_id === e.id && !cv.usado; })[0];
+      var card = document.createElement("div");
+      card.className = "ticket";
+      card.innerHTML =
+        '<div class="ticket-top"><div><div class="ticket-title">' + esc(e.nome) + "</div>" +
+        '<div class="ticket-unit mono">código de convite: ' + esc(e.invite_code) + "</div></div>" +
+        '<span class="pill ' + (e.ativo ? "pill-concluida" : "pill-cancelada") + '">' + (e.ativo ? "Ativa" : "Inativa") + "</span></div>" +
+        (pendente ? '<div class="ticket-desc">Convite de gestor pendente para ' + esc(pendente.email) + ".</div>" : "");
+      var actions = document.createElement("div");
+      actions.className = "ticket-actions";
+      actions.appendChild(actionBtn("Ver painel", function () { state.view = "dashboard"; onEquipeSwitch(e.id); }, "btn-primary btn-sm"));
+      actions.appendChild(actionBtn("Convidar gestor", function () { abrirConviteGestorModal(e.id, e.nome); }, "btn-ghost btn-sm"));
+      if (pendente) {
+        actions.appendChild(actionBtn("Copiar link do convite", function () {
+          var url = location.origin + location.pathname + "?convite=" + pendente.token;
+          navigator.clipboard.writeText(url).then(function () { toast("Link copiado."); });
+        }, "btn-ghost btn-sm"));
+      }
+      actions.appendChild(actionBtn(e.ativo ? "Desativar" : "Ativar", function () {
+        sb.from("equipes").update({ ativo: !e.ativo }).eq("id", e.id).select().then(function (res) {
+          if (res.error) { toast("Erro: " + res.error.message, true); return; }
+          Object.assign(e, res.data[0]); renderView();
+        });
+      }, "btn-ghost btn-sm"));
+      card.appendChild(actions);
+      list.appendChild(card);
+    });
+  }
+  $("#btnNovaEquipe", c).addEventListener("click", openNovaEquipeModal);
+}
+
+function abrirConviteGestorModal(equipeId, equipeNome) {
+  openModal("Convidar gestor" + (equipeNome ? " · " + equipeNome : ""),
+    '<div class="field"><label>Nome</label><input type="text" id="cg_nome" required></div>' +
+    '<div class="field"><label>E-mail</label><input type="email" id="cg_email" required></div>' +
+    '<button class="btn btn-primary" id="cg_save" style="width:100%;">Gerar convite</button>');
+  $("#cg_save").addEventListener("click", function () {
+    var nome = $("#cg_nome").value.trim();
+    var email = $("#cg_email").value.trim();
+    if (!nome || !email) { toast("Preencha nome e e-mail.", true); return; }
+    sb.from("convites_gestor").insert({ equipe_id: equipeId, nome: nome, email: email }).select().then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      var convite = res.data[0];
+      state.data.convites.push(convite);
+      mostrarLinkConvite(convite, nome, email);
+      renderView();
+    });
+  });
+}
+function mostrarLinkConvite(convite, nome, email) {
+  var url = location.origin + location.pathname + "?convite=" + convite.token;
+  openModal("Convite gerado",
+    "<p>Envie este link para <strong>" + esc(nome) + "</strong> (" + esc(email) + ") definir a senha e assumir como Gestor(a):</p>" +
+    '<div class="qr-link" style="margin:.8rem 0;">' + esc(url) + "</div>" +
+    '<button class="btn btn-primary" id="cg_copy" style="width:100%;">Copiar link do convite</button>');
+  $("#cg_copy").addEventListener("click", function () { navigator.clipboard.writeText(url).then(function () { toast("Link copiado."); }); });
+}
+
+function openNovaEquipeModal() {
+  openModal("Nova equipe",
+    '<div class="field"><label>Nome do prédio / equipe</label><input type="text" id="ne_nome" required placeholder="Ex.: Condomínio Jardins"></div>' +
+    '<div class="eyebrow" style="margin-top:1rem;">Primeiro gestor</div>' +
+    '<div class="field"><label>Nome</label><input type="text" id="ne_gestor_nome" required></div>' +
+    '<div class="field"><label>E-mail</label><input type="email" id="ne_gestor_email" required></div>' +
+    '<button class="btn btn-primary" id="ne_save" style="width:100%;margin-top:.6rem;">Criar equipe</button>');
+  $("#ne_save").addEventListener("click", function () {
+    var nome = $("#ne_nome").value.trim();
+    var gNome = $("#ne_gestor_nome").value.trim();
+    var gEmail = $("#ne_gestor_email").value.trim();
+    if (!nome || !gNome || !gEmail) { toast("Preencha todos os campos.", true); return; }
+    sb.from("equipes").insert({ nome: nome }).select().then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      var equipe = res.data[0];
+      state.data.equipes.push(equipe);
+      sb.from("convites_gestor").insert({ equipe_id: equipe.id, nome: gNome, email: gEmail }).select().then(function (res2) {
+        if (res2.error) { toast("Equipe criada, mas houve erro ao gerar convite: " + res2.error.message, true); return; }
+        var convite = res2.data[0];
+        state.data.convites.push(convite);
+        closeModal();
+        mostrarLinkConvite(convite, gNome, gEmail);
+        renderView();
+      });
+    });
+  });
+}
+
+/* ---------- DASHBOARD (encarregado / gestor) ---------- */
+function renderDashboard(c) {
+  var sol = state.data.solicitacoes;
+  var abertas = sol.filter(function (s) { return s.status === "aberta"; });
+  var agendadas = sol.filter(function (s) { return s.status === "agendada"; });
+  var execucao = sol.filter(function (s) { return s.status === "em_execucao"; });
+  var now = new Date(); var mesAtual = now.getMonth(), anoAtual = now.getFullYear();
+  var concluidasMes = sol.filter(function (s) { var d = new Date(s.concluida_em || s.atualizado_em); return s.status === "concluida" && d.getMonth() === mesAtual && d.getFullYear() === anoAtual; });
+  var avaliadas = sol.filter(function (s) { return s.avaliacao_nota; });
+  var notaMedia = avaliadas.length ? (avaliadas.reduce(function (a, s) { return a + s.avaliacao_nota; }, 0) / avaliadas.length).toFixed(1) : "—";
+  var urgentes = sol.filter(function (s) { return s.urgencia === "alta" && ["aberta", "agendada", "em_execucao"].indexOf(s.status) !== -1; })
+    .sort(function (a, b) { return new Date(a.criado_em) - new Date(b.criado_em); });
+
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Visão geral</div><h1>Dashboard</h1><div class="sub">Panorama da manutenção em tempo real.</div></div></div>' +
+    '<div class="stat-grid">' +
+      statTile(state.data.unidades.length, "Unidades cadastradas") +
+      statTile(abertas.length, "Aguardando triagem", true) +
+      statTile(agendadas.length, "Agendados") +
+      statTile(execucao.length, "Em execução") +
+      statTile(concluidasMes.length, "Concluídos no mês") +
+      statTile(notaMedia, "Nota média de satisfação") +
+    "</div>" +
+    '<div class="eyebrow" style="margin-bottom:.7rem;">Chamados urgentes</div>' +
+    '<div class="list" id="urgList"></div>';
+
+  var list = $("#urgList", c);
+  if (!urgentes.length) list.innerHTML = '<div class="empty">Nenhum chamado urgente pendente no momento.</div>';
+  else urgentes.slice(0, 6).forEach(function (s) { list.appendChild(ticketCard(s, "readonly")); });
+}
+function statTile(n, label, accent) {
+  return '<div class="stat-tile' + (accent ? " accent" : "") + '"><div class="n mono">' + n + '</div><div class="l">' + esc(label) + "</div></div>";
+}
+
+/* ---------- SERVIÇOS (triagem — encarregado / gestor) ---------- */
+function renderServicos(c) {
+  var ativos = state.data.solicitacoes.filter(function (s) { return s.status === "aberta" || s.status === "agendada" || s.status === "em_execucao"; })
+    .sort(function (a, b) {
+      var ordUrg = { alta: 0, media: 1, baixa: 2 };
+      if (ordUrg[a.urgencia] !== ordUrg[b.urgencia]) return ordUrg[a.urgencia] - ordUrg[b.urgencia];
+      return new Date(a.criado_em) - new Date(b.criado_em);
+    });
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Chamados</div><h1>Serviços</h1><div class="sub">' + ativos.length + " chamado(s) em andamento no fluxo.</div></div>" +
+    '<button class="btn btn-primary" id="btnNovoChamado">+ Registrar chamado</button></div>' +
+    '<div class="list" id="svcList"></div>';
+  var list = $("#svcList", c);
+  if (!ativos.length) list.innerHTML = '<div class="empty"><div class="display">Tudo em dia</div>Nenhum chamado ativo no momento.</div>';
+  else ativos.forEach(function (s) { list.appendChild(ticketCard(s, "servicos")); });
+
+  $("#btnNovoChamado", c).addEventListener("click", openNovoChamadoModal);
+}
+
+/* ---------- MEUS CHAMADOS (executor) ---------- */
+function renderMeusChamados(c) {
+  var meus = state.data.solicitacoes.filter(function (s) { return s.status === "agendada" || s.status === "em_execucao"; })
+    .sort(function (a, b) { return new Date(a.agendado_em || a.criado_em) - new Date(b.agendado_em || b.criado_em); });
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Minha fila</div><h1>Meus Chamados</h1><div class="sub">' + meus.length + " chamado(s) agendado(s) ou em execução para você.</div></div></div>" +
+    '<div class="list" id="meusList"></div>';
+  var list = $("#meusList", c);
+  if (!meus.length) list.innerHTML = '<div class="empty"><div class="display">Nada por aqui</div>Você não tem chamados designados no momento.</div>';
+  else meus.forEach(function (s) { list.appendChild(ticketCard(s, "meus")); });
+}
+
+function resolveAssigneeLabel(s) {
+  if (s.executor_user_id) {
+    var ex = state.data.profiles.find(function (p) { return p.user_id === s.executor_user_id; });
+    return "Executor: " + (ex ? (ex.nome || ex.email) : "designado");
+  }
+  if (s.prestador_id) {
+    var pr = state.data.prestadores.find(function (p) { return p.id === s.prestador_id; });
+    return "Prestador: " + (pr ? pr.nome : "designado");
+  }
+  return null;
+}
+
+function ticketCard(s, mode) {
+  var el = document.createElement("div");
+  el.className = "ticket u-" + s.urgencia;
+  var unidade = esc(s.bloco) + " · " + esc(s.numero);
+  var assignee = resolveAssigneeLabel(s);
+  el.innerHTML =
+    '<div class="ticket-top">' +
+      '<div><div class="ticket-id mono">' + osCode(s.numero_os) + " · " + fmtDate(s.criado_em) + '</div>' +
+      '<div class="ticket-title">' + esc(s.categoria_nome) + '</div>' +
+      '<div class="ticket-unit">Unidade ' + unidade + (s.solicitante_nome ? " · " + esc(s.solicitante_nome) : "") + "</div></div>" +
+      '<div class="ticket-meta"><span class="pill pill-' + s.urgencia + '">' + URG_LABEL[s.urgencia] + '</span><span class="pill pill-' + s.status + '">' + STATUS_LABEL[s.status] + "</span></div>" +
+    "</div>" +
+    '<div class="ticket-desc">' + esc(s.descricao) + "</div>" +
+    (s.agendado_em ? '<div class="ticket-unit">Agendado para ' + fmtDate(s.agendado_em) + "</div>" : "") +
+    (assignee ? '<div class="ticket-unit">' + esc(assignee) + "</div>" : "");
+
+  var actions = document.createElement("div");
+  actions.className = "ticket-actions";
+  if (mode === "servicos") {
+    if (s.status === "aberta") actions.appendChild(actionBtn("Fazer triagem", function () { openTriagemModal(s); }));
+    if (s.status === "agendada") actions.appendChild(actionBtn("Editar triagem", function () { openTriagemModal(s); }, "btn-ghost"));
+    if (s.status === "em_execucao") actions.appendChild(actionBtn("Marcar concluído", function () { updateStatus(s.id, "concluida"); }, "btn-ghost"));
+    if (s.status !== "concluida" && s.status !== "cancelada") actions.appendChild(actionBtn("Cancelar", function () { updateStatus(s.id, "cancelada"); }, "btn-ghost"));
+  } else if (mode === "meus") {
+    if (s.status === "agendada") actions.appendChild(actionBtn("Iniciar execução", function () { updateStatus(s.id, "em_execucao"); }));
+    if (s.status === "em_execucao") actions.appendChild(actionBtn("Concluir serviço", function () { openConcluirModal(s); }));
+  }
+  actions.appendChild(actionBtn("Detalhes", function () { openDetailModal(s); }, "btn-ghost"));
+  el.appendChild(actions);
+  return el;
+}
+function actionBtn(label, fn, cls) {
+  var b = document.createElement("button");
+  b.className = "btn btn-sm " + (cls || "btn-primary");
+  b.textContent = label;
+  b.addEventListener("click", fn);
+  return b;
+}
+
+function updateStatus(id, status) {
+  sb.from("solicitacoes").update({ status: status }).eq("id", id).select().then(function (res) {
+    if (res.error) { toast("Erro ao atualizar: " + res.error.message, true); return; }
+    var s = state.data.solicitacoes.find(function (x) { return x.id === id; });
+    if (s) Object.assign(s, res.data[0]);
+    toast("Chamado atualizado para " + STATUS_LABEL[status] + ".");
+    renderView();
+  });
+}
+
+/* ---------- Insumos: widgets reutilizados na triagem e na conclusão ---------- */
+function renderInsumoAddForm(prefix) {
+  if (!state.data.insumos.length) return '<p class="hint">Cadastre insumos em "Insumos" para poder adicioná-los aqui.</p>';
+  var opts = state.data.insumos.filter(function (i) { return i.ativo; })
+    .map(function (i) { return '<option value="' + i.id + '" data-custo="' + i.custo_unitario + '" data-unidade="' + esc(i.unidade) + '">' + esc(i.nome) + "</option>"; }).join("");
+  return '<div class="insumo-add"><select id="' + prefix + '_ins_sel"><option value="">Escolher insumo…</option>' + opts + '</select>' +
+    '<input type="number" id="' + prefix + '_ins_qtd" placeholder="Qtd" min="0.01" step="0.01">' +
+    '<button type="button" class="btn btn-sm" id="' + prefix + '_ins_add">Adicionar</button></div>';
+}
+function wireInsumoAddForm(prefix, solicitacaoId, tipo) {
+  var btn = $("#" + prefix + "_ins_add");
+  if (!btn) return;
+  btn.addEventListener("click", function () {
+    var sel = $("#" + prefix + "_ins_sel");
+    var qtd = parseFloat($("#" + prefix + "_ins_qtd").value);
+    if (!sel.value || !qtd || qtd <= 0) { toast("Escolha um insumo e uma quantidade válida.", true); return; }
+    var opt = sel.options[sel.selectedIndex];
+    sb.from("solicitacao_insumos").insert({
+      solicitacao_id: solicitacaoId, insumo_id: sel.value, insumo_nome: opt.textContent,
+      unidade: opt.dataset.unidade, quantidade: qtd, custo_unitario: parseFloat(opt.dataset.custo) || 0, tipo: tipo
+    }).select().then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      state.data.solIns.push(res.data[0]);
+      sel.value = ""; $("#" + prefix + "_ins_qtd").value = "";
+      loadInsumoLista(solicitacaoId, tipo, "#" + prefix + "_insumos_list", true);
+    });
+  });
+}
+function loadInsumoLista(solicitacaoId, tipo, containerSel, editable) {
+  var container = $(containerSel);
+  if (!container) return;
+  var itens = state.data.solIns.filter(function (r) { return r.solicitacao_id === solicitacaoId && r.tipo === tipo; });
+  if (!itens.length) { container.innerHTML = '<p class="hint">Nenhum insumo ' + (tipo === "previsto" ? "previsto" : "usado") + " ainda.</p>"; return; }
+  container.innerHTML = itens.map(function (it) {
+    return '<div class="insumo-row"><span style="flex:1;">' + esc(it.insumo_nome) + " · " + it.quantidade + " " + esc(it.unidade) + '</span><span class="mono">' + brl(it.quantidade * it.custo_unitario) + "</span>" +
+      (editable ? '<button type="button" class="btn btn-ghost btn-sm" data-del="' + it.id + '">×</button>' : "") + "</div>";
+  }).join("");
+  if (editable) {
+    $all("[data-del]", container).forEach(function (b) {
+      b.addEventListener("click", function () {
+        var id = b.dataset.del;
+        sb.from("solicitacao_insumos").delete().eq("id", id).then(function (res) {
+          if (res.error) { toast("Erro: " + res.error.message, true); return; }
+          state.data.solIns = state.data.solIns.filter(function (x) { return x.id !== id; });
+          loadInsumoLista(solicitacaoId, tipo, containerSel, editable);
+        });
+      });
+    });
+  }
+}
+
+/* ---------- Triagem (encarregado / gestor) ---------- */
+function openTriagemModal(s) {
+  var executores = state.data.profiles.filter(function (p) { return p.role === "executor"; });
+  var execOpts = executores.map(function (p) { return '<option value="' + p.user_id + '"' + (p.user_id === s.executor_user_id ? " selected" : "") + ">" + esc(p.nome || p.email) + "</option>"; }).join("");
+  var prestOpts = state.data.prestadores.filter(function (p) { return p.ativo; })
+    .map(function (p) { return '<option value="' + p.id + '"' + (p.id === s.prestador_id ? " selected" : "") + ">" + esc(p.nome) + "</option>"; }).join("");
+  var tipoDesig = s.prestador_id ? "prestador" : "executor";
+  var agendadoVal = s.agendado_em ? new Date(new Date(s.agendado_em).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : "";
+
+  openModal("Triagem · " + osCode(s.numero_os),
+    '<p class="hint" style="margin-bottom:.8rem;">' + esc(s.categoria_nome) + " — " + esc(s.descricao) + "</p>" +
+    '<div class="field"><label>Agendar para</label><input type="datetime-local" id="tg_data" value="' + agendadoVal + '"></div>' +
+    '<div class="field"><label>Designar para</label>' +
+      '<div class="field-row" style="margin-bottom:.5rem;">' +
+        '<label class="radio-inline"><input type="radio" name="tg_tipo" value="executor"' + (tipoDesig === "executor" ? " checked" : "") + "> Executor da equipe</label>" +
+        '<label class="radio-inline"><input type="radio" name="tg_tipo" value="prestador"' + (tipoDesig === "prestador" ? " checked" : "") + "> Prestador externo</label>" +
+      "</div>" +
+      (executores.length
+        ? '<select id="tg_executor"' + (tipoDesig !== "executor" ? ' style="display:none;"' : '') + '><option value="">Selecione…</option>' + execOpts + "</select>"
+        : '<p class="hint" id="tg_executor_vazio"' + (tipoDesig !== "executor" ? ' style="display:none;"' : '') + '>Nenhum executor cadastrado na equipe ainda (defina em "Equipe").</p>') +
+      '<select id="tg_prestador"' + (tipoDesig !== "prestador" ? ' style="display:none;"' : '') + '><option value="">Selecione…</option>' + prestOpts + "</select>" +
+    "</div>" +
+    '<div class="eyebrow" style="margin-top:1rem;">Insumos previstos</div>' +
+    '<div id="tg_insumos_list"></div>' +
+    renderInsumoAddForm("tg") +
+    '<button class="btn btn-primary" id="tg_save" style="width:100%;margin-top:1.2rem;">Salvar agendamento</button>');
+
+  $all('input[name="tg_tipo"]').forEach(function (r) {
+    r.addEventListener("change", function () {
+      if (!r.checked) return;
+      var execSel = $("#tg_executor"); var execEmpty = $("#tg_executor_vazio");
+      if (execSel) execSel.style.display = r.value === "executor" ? "" : "none";
+      if (execEmpty) execEmpty.style.display = r.value === "executor" ? "" : "none";
+      $("#tg_prestador").style.display = r.value === "prestador" ? "" : "none";
+    });
+  });
+
+  loadInsumoLista(s.id, "previsto", "#tg_insumos_list", true);
+  wireInsumoAddForm("tg", s.id, "previsto");
+
+  $("#tg_save").addEventListener("click", function () {
+    var tipo = $('input[name="tg_tipo"]:checked').value;
+    var payload = { agendado_em: $("#tg_data").value ? new Date($("#tg_data").value).toISOString() : null, status: "agendada" };
+    if (tipo === "executor") {
+      var execSel = $("#tg_executor");
+      payload.executor_user_id = execSel ? (execSel.value || null) : null;
+      payload.prestador_id = null;
+    } else {
+      payload.prestador_id = $("#tg_prestador").value || null;
+      payload.executor_user_id = null;
+    }
+    sb.from("solicitacoes").update(payload).eq("id", s.id).select().then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      Object.assign(s, res.data[0]);
+      closeModal(); toast("Triagem salva."); renderView();
+    });
+  });
+}
+
+/* ---------- Conclusão (executor) ---------- */
+function openConcluirModal(s) {
+  openModal("Concluir · " + osCode(s.numero_os),
+    '<div class="eyebrow">Insumos usados</div><div id="cc_insumos_list"></div>' +
+    renderInsumoAddForm("cc") +
+    '<button class="btn btn-primary" id="cc_save" style="width:100%;margin-top:1.2rem;">Concluir serviço</button>');
+  loadInsumoLista(s.id, "usado", "#cc_insumos_list", true);
+  wireInsumoAddForm("cc", s.id, "usado");
+  $("#cc_save").addEventListener("click", function () {
+    sb.from("solicitacoes").update({ status: "concluida" }).eq("id", s.id).select().then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      Object.assign(s, res.data[0]);
+      var url = location.origin + location.pathname + "?av=" + s.avaliacao_token;
+      openModal("Serviço concluído",
+        '<p>Chamado marcado como concluído. Envie este link para quem solicitou avaliar o atendimento (WhatsApp, SMS, etc.):</p>' +
+        '<div class="qr-link" style="margin:.8rem 0;">' + esc(url) + "</div>" +
+        '<button class="btn btn-primary" id="cc_copy" style="width:100%;">Copiar link de avaliação</button>');
+      $("#cc_copy").addEventListener("click", function () { navigator.clipboard.writeText(url).then(function () { toast("Link copiado."); }); });
+      renderView();
+    });
+  });
+}
+
+function openDetailModal(s) {
+  openModal(osCode(s.numero_os), '<div id="detBody">carregando…</div>');
+  sb.from("solicitacao_eventos").select("*").eq("solicitacao_id", s.id).order("criado_em").then(function (res) {
+    var evs = res.data || [];
+    var previstos = state.data.solIns.filter(function (r) { return r.solicitacao_id === s.id && r.tipo === "previsto"; });
+    var usados = state.data.solIns.filter(function (r) { return r.solicitacao_id === s.id && r.tipo === "usado"; });
+    function listaInsumos(arr) {
+      if (!arr.length) return '<p class="hint">Nenhum.</p>';
+      var total = arr.reduce(function (acc, r) { return acc + r.quantidade * r.custo_unitario; }, 0);
+      return arr.map(function (r) { return "<div>" + esc(r.insumo_nome) + " · " + r.quantidade + " " + esc(r.unidade) + " · " + brl(r.quantidade * r.custo_unitario) + "</div>"; }).join("") +
+        '<div style="margin-top:.3rem;font-weight:700;">Total: ' + brl(total) + "</div>";
+    }
+    var assignee = resolveAssigneeLabel(s);
+    var html = '<p style="margin-bottom:.8rem;"><span class="pill pill-' + s.status + '">' + STATUS_LABEL[s.status] + '</span> <span class="pill pill-' + s.urgencia + '">' + URG_LABEL[s.urgencia] + "</span></p>" +
+      "<p><strong>Unidade:</strong> " + esc(s.bloco) + " · " + esc(s.numero) + "</p>" +
+      "<p><strong>Categoria:</strong> " + esc(s.categoria_nome) + "</p>" +
+      "<p><strong>Descrição:</strong> " + esc(s.descricao) + "</p>" +
+      (s.solicitante_nome ? "<p><strong>Solicitante:</strong> " + esc(s.solicitante_nome) + (s.solicitante_contato ? " · " + esc(s.solicitante_contato) : "") + "</p>" : "") +
+      (s.agendado_em ? "<p><strong>Agendado para:</strong> " + fmtDate(s.agendado_em) + "</p>" : "") +
+      (assignee ? "<p><strong>" + esc(assignee) + "</strong></p>" : "") +
+      (s.avaliacao_nota ? "<p><strong>Avaliação:</strong> " + "★".repeat(s.avaliacao_nota) + (s.avaliacao_comentario ? " — " + esc(s.avaliacao_comentario) : "") + "</p>" : "") +
+      '<div class="eyebrow" style="margin-top:1rem;">Insumos previstos</div>' + listaInsumos(previstos) +
+      '<div class="eyebrow" style="margin-top:1rem;">Insumos usados</div>' + listaInsumos(usados) +
+      '<div class="eyebrow" style="margin-top:1rem;">Linha do tempo</div><div class="timeline">' +
+      evs.map(function (e) { return '<div class="tl-item"><div><div class="tl-when">' + fmtDate(e.criado_em) + '</div><div>' + STATUS_LABEL[e.status] + (e.nota ? " — " + esc(e.nota) : "") + "</div></div></div>"; }).join("") +
+      "</div>";
+    $("#detBody").innerHTML = html;
+  });
+}
+
+function openNovoChamadoModal() {
+  var catOpts = state.data.categorias.map(function (c) { return '<option value="' + c.id + '" data-nome="' + esc(c.nome) + '">' + esc(c.nome) + "</option>"; }).join("");
+  var uniOpts = state.data.unidades.map(function (u) { return '<option value="' + u.id + '">' + esc(u.bloco) + " · " + esc(u.numero) + "</option>"; }).join("");
+  openModal("Registrar chamado", (state.data.unidades.length ?
+    '<div class="field"><label>Unidade</label><select id="nc_unidade" required>' + uniOpts + "</select></div>" :
+    '<p class="hint">Cadastre uma unidade antes de registrar um chamado manual.</p>') +
+    '<div class="field"><label>Categoria</label><select id="nc_categoria">' + catOpts + "</select></div>" +
+    '<div class="field"><label>Descrição</label><textarea id="nc_desc" required></textarea></div>' +
+    '<div class="field"><label>Urgência</label><select id="nc_urg"><option value="baixa">Baixa</option><option value="media" selected>Média</option><option value="alta">Alta</option></select></div>' +
+    (state.data.unidades.length ? '<button class="btn btn-primary" id="nc_save" style="width:100%;">Registrar</button>' : ""));
+  var saveBtn = $("#nc_save");
+  if (saveBtn) saveBtn.addEventListener("click", function () {
+    var u = state.data.unidades.find(function (x) { return x.id === $("#nc_unidade").value; });
+    var catSel = $("#nc_categoria");
+    var catNome = catSel.options[catSel.selectedIndex] ? catSel.options[catSel.selectedIndex].dataset.nome : "Outros";
+    var desc = $("#nc_desc").value.trim();
+    if (!desc) { toast("Descreva o chamado.", true); return; }
+    sb.from("solicitacoes").insert({ unidade_id: u.id, bloco: u.bloco, numero: u.numero, categoria_id: catSel.value || null, categoria_nome: catNome, descricao: desc, urgencia: $("#nc_urg").value }).select().then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      state.data.solicitacoes.unshift(res.data[0]);
+      closeModal(); toast("Chamado registrado."); renderView();
+    });
+  });
+}
+
+/* ---------- UNIDADES ---------- */
+function renderUnidades(c) {
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Cadastro</div><h1>Unidades</h1><div class="sub">' + state.data.unidades.length + " unidade(s) cadastrada(s).</div></div>" +
+    '<button class="btn btn-primary" id="btnNovaUnidade">+ Nova unidade</button></div>';
+
+  if (!state.data.unidades.length) {
+    c.innerHTML += '<div class="empty"><div class="display">Nenhuma unidade ainda</div>Cadastre a primeira unidade para gerar o QR code de solicitação.</div>';
+  } else {
+    var wrap = document.createElement("div"); wrap.className = "table-wrap";
+    var tb = document.createElement("table");
+    tb.innerHTML = "<thead><tr><th>Bloco</th><th>Nº</th><th>Morador</th><th>Telefone</th><th></th></tr></thead>";
+    var tbody = document.createElement("tbody");
+    state.data.unidades.forEach(function (u) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + esc(u.bloco) + "</td><td>" + esc(u.numero) + "</td><td>" + esc(u.morador || "—") + '</td><td class="mono">' + esc(u.telefone || "—") + "</td>";
+      var td = document.createElement("td");
+      td.style.textAlign = "right"; td.style.whiteSpace = "nowrap";
+      var bQr = actionBtn("QR", function () { openQrModal(u); }, "btn-ghost btn-sm");
+      var bEd = actionBtn("Editar", function () { openUnidadeModal(u); }, "btn-ghost btn-sm");
+      var bDel = actionBtn("Excluir", function () { confirmDelete("unidades", u.id, "Excluir unidade " + u.bloco + "-" + u.numero + "?", function () { state.data.unidades = state.data.unidades.filter(function (x) { return x.id !== u.id; }); renderView(); }); }, "btn-ghost btn-sm");
+      td.appendChild(bQr); td.appendChild(bEd); td.appendChild(bDel);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    });
+    tb.appendChild(tbody); wrap.appendChild(tb); c.appendChild(wrap);
+  }
+  $("#btnNovaUnidade", c).addEventListener("click", function () { openUnidadeModal(); });
+}
+
+function openUnidadeModal(u) {
+  openModal(u ? "Editar unidade" : "Nova unidade",
+    '<div class="field-row"><div class="field"><label>Bloco</label><input type="text" id="u_bloco" value="' + esc(u ? u.bloco : "") + '" required></div>' +
+    '<div class="field"><label>Número / Apto</label><input type="text" id="u_numero" value="' + esc(u ? u.numero : "") + '" required></div></div>' +
+    '<div class="field"><label>Morador</label><input type="text" id="u_morador" value="' + esc(u ? u.morador : "") + '"></div>' +
+    '<div class="field"><label>Telefone</label><input type="tel" id="u_telefone" value="' + esc(u ? u.telefone : "") + '"></div>' +
+    '<div class="field"><label>Observações</label><textarea id="u_obs">' + esc(u ? u.observacoes : "") + "</textarea></div>" +
+    '<button class="btn btn-primary" id="u_save" style="width:100%;">Salvar</button>');
+  $("#u_save").addEventListener("click", function () {
+    var payload = { bloco: $("#u_bloco").value.trim(), numero: $("#u_numero").value.trim(), morador: $("#u_morador").value.trim() || null, telefone: $("#u_telefone").value.trim() || null, observacoes: $("#u_obs").value.trim() || null };
+    if (!payload.bloco || !payload.numero) { toast("Preencha bloco e número.", true); return; }
+    var q = u ? sb.from("unidades").update(payload).eq("id", u.id).select() : sb.from("unidades").insert(Object.assign({}, payload, equipeInsertExtra())).select();
+    q.then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      if (u) { Object.assign(u, res.data[0]); } else { state.data.unidades.push(res.data[0]); }
+      state.data.unidades.sort(function (a, b) { return (a.bloco + a.numero).localeCompare(b.bloco + b.numero); });
+      closeModal(); toast("Unidade salva."); renderView();
+    });
+  });
+}
+
+function openQrModal(u) {
+  var url = location.origin + location.pathname + "?u=" + u.id + "&b=" + encodeURIComponent(u.bloco) + "&n=" + encodeURIComponent(u.numero);
+  openModal("QR · " + u.bloco + "-" + u.numero,
+    '<div class="qr-box" id="print-area"><div class="render" id="qrRender"></div><div class="qr-link">' + esc(url) + '</div>' +
+    '<p class="hint">Fixe este QR na porta ou mural da unidade. Ao escanear, quem mora ali abre o formulário de solicitação já identificado.</p></div>' +
+    '<div style="display:flex;gap:.6rem;margin-top:1rem;"><button class="btn" id="qr_copy" style="flex:1;">Copiar link</button><button class="btn btn-primary" id="qr_print" style="flex:1;">Imprimir</button></div>');
+  new QRCode($("#qrRender"), { text: url, width: 200, height: 200, correctLevel: QRCode.CorrectLevel.M });
+  $("#qr_copy").addEventListener("click", function () { navigator.clipboard.writeText(url).then(function () { toast("Link copiado."); }); });
+  $("#qr_print").addEventListener("click", function () { window.print(); });
+}
+
+/* ---------- PRESTADORES ---------- */
+function renderPrestadores(c) {
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Cadastro</div><h1>Prestadores</h1><div class="sub">' + state.data.prestadores.length + " prestador(es) externo(s) cadastrado(s).</div></div>" +
+    '<button class="btn btn-primary" id="btnNovoPrestador">+ Novo prestador</button></div>';
+  if (!state.data.prestadores.length) {
+    c.innerHTML += '<div class="empty"><div class="display">Nenhum prestador ainda</div>Cadastre fornecedores externos usados quando o serviço não é feito pela equipe interna.</div>';
+  } else {
+    var wrap = document.createElement("div"); wrap.className = "table-wrap";
+    var tb = document.createElement("table");
+    tb.innerHTML = "<thead><tr><th>Nome</th><th>Especialidade</th><th>Contato</th><th>Status</th><th></th></tr></thead>";
+    var tbody = document.createElement("tbody");
+    state.data.prestadores.forEach(function (p) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + esc(p.nome) + "</td><td>" + esc(p.especialidade || "—") + '</td><td class="mono">' + esc(p.telefone || p.email || "—") + "</td>" +
+        "<td><span class=\"pill " + (p.ativo ? "pill-concluida" : "pill-cancelada") + "\">" + (p.ativo ? "Ativo" : "Inativo") + "</span></td>";
+      var td = document.createElement("td"); td.style.textAlign = "right"; td.style.whiteSpace = "nowrap";
+      td.appendChild(actionBtn("Editar", function () { openPrestadorModal(p); }, "btn-ghost btn-sm"));
+      td.appendChild(actionBtn("Excluir", function () { confirmDelete("prestadores", p.id, "Excluir prestador " + p.nome + "?", function () { state.data.prestadores = state.data.prestadores.filter(function (x) { return x.id !== p.id; }); renderView(); }); }, "btn-ghost btn-sm"));
+      tr.appendChild(td); tbody.appendChild(tr);
+    });
+    tb.appendChild(tbody); wrap.appendChild(tb); c.appendChild(wrap);
+  }
+  $("#btnNovoPrestador", c).addEventListener("click", function () { openPrestadorModal(); });
+}
+
+function openPrestadorModal(p) {
+  var catOpts = state.data.categorias.map(function (c) { return '<option value="' + esc(c.nome) + '"' + (p && p.especialidade === c.nome ? " selected" : "") + ">" + esc(c.nome) + "</option>"; }).join("");
+  openModal(p ? "Editar prestador" : "Novo prestador",
+    '<div class="field"><label>Nome</label><input type="text" id="p_nome" value="' + esc(p ? p.nome : "") + '" required></div>' +
+    '<div class="field"><label>Especialidade</label><select id="p_esp"><option value="">—</option>' + catOpts + "</select></div>" +
+    '<div class="field-row"><div class="field"><label>Telefone</label><input type="tel" id="p_tel" value="' + esc(p ? p.telefone : "") + '"></div>' +
+    '<div class="field"><label>E-mail</label><input type="email" id="p_email" value="' + esc(p ? p.email : "") + '"></div></div>' +
+    '<div class="field"><label class="switch"><input type="checkbox" id="p_ativo"' + (!p || p.ativo ? " checked" : "") + "><span>Ativo</span></label></div>" +
+    '<button class="btn btn-primary" id="p_save" style="width:100%;">Salvar</button>');
+  $("#p_save").addEventListener("click", function () {
+    var payload = { nome: $("#p_nome").value.trim(), especialidade: $("#p_esp").value || null, telefone: $("#p_tel").value.trim() || null, email: $("#p_email").value.trim() || null, ativo: $("#p_ativo").checked };
+    if (!payload.nome) { toast("Informe o nome.", true); return; }
+    var q = p ? sb.from("prestadores").update(payload).eq("id", p.id).select() : sb.from("prestadores").insert(Object.assign({}, payload, equipeInsertExtra())).select();
+    q.then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      if (p) Object.assign(p, res.data[0]); else state.data.prestadores.push(res.data[0]);
+      closeModal(); toast("Prestador salvo."); renderView();
+    });
+  });
+}
+
+/* ---------- INSUMOS (catálogo — encarregado / gestor) ---------- */
+function renderInsumos(c) {
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Cadastro</div><h1>Insumos</h1><div class="sub">' + state.data.insumos.length + " insumo(s) cadastrado(s).</div></div>" +
+    '<button class="btn btn-primary" id="btnNovoInsumo">+ Novo insumo</button></div>';
+  if (!state.data.insumos.length) {
+    c.innerHTML += '<div class="empty"><div class="display">Nenhum insumo ainda</div>Cadastre materiais como torneiras, fios e tintas para usar nos chamados.</div>';
+  } else {
+    var wrap = document.createElement("div"); wrap.className = "table-wrap";
+    var tb = document.createElement("table");
+    tb.innerHTML = "<thead><tr><th>Nome</th><th>Unidade</th><th>Custo unitário</th><th>Status</th><th></th></tr></thead>";
+    var tbody = document.createElement("tbody");
+    state.data.insumos.forEach(function (i) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + esc(i.nome) + "</td><td>" + esc(i.unidade) + '</td><td class="mono">' + brl(i.custo_unitario) + "</td>" +
+        "<td><span class=\"pill " + (i.ativo ? "pill-concluida" : "pill-cancelada") + "\">" + (i.ativo ? "Ativo" : "Inativo") + "</span></td>";
+      var td = document.createElement("td"); td.style.textAlign = "right"; td.style.whiteSpace = "nowrap";
+      td.appendChild(actionBtn("Editar", function () { openInsumoModal(i); }, "btn-ghost btn-sm"));
+      td.appendChild(actionBtn("Excluir", function () { confirmDelete("insumos", i.id, "Excluir insumo " + i.nome + "?", function () { state.data.insumos = state.data.insumos.filter(function (x) { return x.id !== i.id; }); renderView(); }); }, "btn-ghost btn-sm"));
+      tr.appendChild(td); tbody.appendChild(tr);
+    });
+    tb.appendChild(tbody); wrap.appendChild(tb); c.appendChild(wrap);
+  }
+  $("#btnNovoInsumo", c).addEventListener("click", function () { openInsumoModal(); });
+}
+function openInsumoModal(i) {
+  openModal(i ? "Editar insumo" : "Novo insumo",
+    '<div class="field"><label>Nome</label><input type="text" id="i_nome" value="' + esc(i ? i.nome : "") + '" required></div>' +
+    '<div class="field-row"><div class="field"><label>Unidade</label><input type="text" id="i_unidade" value="' + esc(i ? i.unidade : "un") + '" placeholder="un, m, L, kg…"></div>' +
+    '<div class="field"><label>Custo unitário (R$)</label><input type="number" step="0.01" min="0" id="i_custo" value="' + (i ? i.custo_unitario : "0") + '"></div></div>' +
+    '<div class="field"><label class="switch"><input type="checkbox" id="i_ativo"' + (!i || i.ativo ? " checked" : "") + "><span>Ativo</span></label></div>" +
+    '<button class="btn btn-primary" id="i_save" style="width:100%;">Salvar</button>');
+  $("#i_save").addEventListener("click", function () {
+    var payload = { nome: $("#i_nome").value.trim(), unidade: $("#i_unidade").value.trim() || "un", custo_unitario: parseFloat($("#i_custo").value) || 0, ativo: $("#i_ativo").checked };
+    if (!payload.nome) { toast("Informe o nome.", true); return; }
+    var q = i ? sb.from("insumos").update(payload).eq("id", i.id).select() : sb.from("insumos").insert(Object.assign({}, payload, equipeInsertExtra())).select();
+    q.then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      if (i) Object.assign(i, res.data[0]); else state.data.insumos.push(res.data[0]);
+      closeModal(); toast("Insumo salvo."); renderView();
+    });
+  });
+}
+
+/* ---------- EQUIPE (gestor) ---------- */
+function renderEquipe(c) {
+  var pendentes = state.data.profiles.filter(function (p) { return p.role === "pendente"; });
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Acesso</div><h1>Equipe</h1><div class="sub">' + state.data.profiles.length + " conta(s)" + (pendentes.length ? " · " + pendentes.length + " aguardando função" : "") + "</div></div></div>" +
+    '<div class="table-wrap"><table><thead><tr><th>Nome</th><th>E-mail</th><th>Função</th><th>Desde</th></tr></thead><tbody id="eqBody"></tbody></table></div>';
+  var body = $("#eqBody");
+  state.data.profiles.slice()
+    .sort(function (a, b) { return (a.role === "pendente" ? 0 : 1) - (b.role === "pendente" ? 0 : 1); })
+    .forEach(function (p) {
+      var tr = document.createElement("tr");
+      var tdNome = document.createElement("td"); tdNome.textContent = p.nome || "—";
+      var tdEmail = document.createElement("td"); tdEmail.className = "mono"; tdEmail.textContent = p.email;
+      var tdRole = document.createElement("td");
+      var sel = document.createElement("select");
+      ["pendente", "encarregado", "executor", "gestor"].forEach(function (r) {
+        var o = document.createElement("option"); o.value = r; o.textContent = ROLE_LABEL[r]; if (r === p.role) o.selected = true; sel.appendChild(o);
+      });
+      sel.addEventListener("change", function () {
+        var novo = sel.value;
+        sb.from("profiles").update({ role: novo }).eq("user_id", p.user_id).then(function (res) {
+          if (res.error) { toast("Erro: " + res.error.message, true); sel.value = p.role; return; }
+          p.role = novo; toast("Função de " + (p.nome || p.email) + " atualizada para " + ROLE_LABEL[novo] + ".");
+        });
+      });
+      tdRole.appendChild(sel);
+      var tdData = document.createElement("td"); tdData.className = "mono"; tdData.textContent = fmtDateShort(p.criado_em);
+      tr.appendChild(tdNome); tr.appendChild(tdEmail); tr.appendChild(tdRole); tr.appendChild(tdData);
+      body.appendChild(tr);
+    });
+}
+
+/* ---------- HISTÓRICO ---------- */
+function renderHistorico(c) {
+  var arquivados = state.data.solicitacoes.filter(function (s) { return s.status === "concluida" || s.status === "cancelada"; });
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Arquivo</div><h1>Histórico</h1><div class="sub">' + arquivados.length + " chamado(s) concluído(s) ou cancelado(s).</div></div></div>" +
+    '<div class="list" id="histList"></div>';
+  var list = $("#histList", c);
+  if (!arquivados.length) { list.innerHTML = '<div class="empty">Ainda não há chamados arquivados.</div>'; return; }
+  arquivados.sort(function (a, b) { return new Date(b.atualizado_em) - new Date(a.atualizado_em); });
+  arquivados.forEach(function (s) { list.appendChild(ticketCard(s, "readonly")); });
+}
+
+/* ---------- RELATÓRIOS (gestor) ---------- */
+function renderRelatorios(c) {
+  var sol = state.data.solicitacoes;
+  var byStatus = { aberta: 0, agendada: 0, em_execucao: 0, concluida: 0, cancelada: 0 };
+  sol.forEach(function (s) { byStatus[s.status] = (byStatus[s.status] || 0) + 1; });
+  var byCat = {};
+  sol.forEach(function (s) { byCat[s.categoria_nome] = (byCat[s.categoria_nome] || 0) + 1; });
+  var catRows = Object.keys(byCat).map(function (k) { return { k: k, v: byCat[k] }; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 8);
+  var byUnidade = {};
+  sol.forEach(function (s) { var k = s.bloco + " · " + s.numero; byUnidade[k] = (byUnidade[k] || 0) + 1; });
+  var uniRows = Object.keys(byUnidade).map(function (k) { return { k: k, v: byUnidade[k] }; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 5);
+
+  var comAgendamento = sol.filter(function (s) { return s.agendada_em; });
+  var respMedia = "—";
+  if (comAgendamento.length) {
+    var totalResp = comAgendamento.reduce(function (acc, s) { return acc + (new Date(s.agendada_em) - new Date(s.criado_em)); }, 0);
+    respMedia = fmtDuracao(totalResp / comAgendamento.length);
+  }
+  var comExecucao = sol.filter(function (s) { return s.execucao_iniciada_em && s.concluida_em; });
+  var execMedia = "—";
+  if (comExecucao.length) {
+    var totalExec = comExecucao.reduce(function (acc, s) { return acc + (new Date(s.concluida_em) - new Date(s.execucao_iniciada_em)); }, 0);
+    execMedia = fmtDuracao(totalExec / comExecucao.length);
+  }
+
+  var usados = state.data.solIns.filter(function (r) { return r.tipo === "usado"; });
+  var custoTotal = usados.reduce(function (acc, r) { return acc + r.quantidade * r.custo_unitario; }, 0);
+  var custoPorInsumo = {};
+  usados.forEach(function (r) { custoPorInsumo[r.insumo_nome] = (custoPorInsumo[r.insumo_nome] || 0) + r.quantidade * r.custo_unitario; });
+  var insumoRows = Object.keys(custoPorInsumo).map(function (k) { return { k: k, v: custoPorInsumo[k] }; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 6);
+
+  var avaliadas = sol.filter(function (s) { return s.avaliacao_nota; });
+  var notaMedia = avaliadas.length ? (avaliadas.reduce(function (a, s) { return a + s.avaliacao_nota; }, 0) / avaliadas.length).toFixed(1) : "—";
+  var concluidos = sol.filter(function (s) { return s.status === "concluida"; });
+  var custoMedioPorChamado = concluidos.length ? custoTotal / concluidos.length : 0;
+
+  var maxStatus = Math.max(1, byStatus.aberta, byStatus.agendada, byStatus.em_execucao, byStatus.concluida, byStatus.cancelada);
+  var maxCat = Math.max(1, catRows.length ? catRows[0].v : 1);
+  var maxIns = Math.max(1, insumoRows.length ? insumoRows[0].v : 1);
+
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Indicadores</div><h1>Relatórios</h1><div class="sub">Baseado em ' + sol.length + " solicitação(ões) registrada(s).</div></div></div>" +
+    '<div class="stat-grid">' +
+      statTile(respMedia, "Resposta média do encarregado", true) +
+      statTile(execMedia, "Tempo médio de execução") +
+      statTile(brl(custoTotal), "Custo total em insumos") +
+      statTile(brl(custoMedioPorChamado), "Custo médio por chamado") +
+      statTile(notaMedia, "Nota média de satisfação") +
+    "</div>" +
+    '<div class="card" style="margin-bottom:1.2rem;"><div class="eyebrow">Chamados por status</div><div class="bars">' +
+      barRow("Abertos", byStatus.aberta, maxStatus) + barRow("Agendados", byStatus.agendada, maxStatus) + barRow("Em execução", byStatus.em_execucao, maxStatus) + barRow("Concluídos", byStatus.concluida, maxStatus) + barRow("Cancelados", byStatus.cancelada, maxStatus) +
+    "</div></div>" +
+    '<div class="card" style="margin-bottom:1.2rem;"><div class="eyebrow">Chamados por categoria</div><div class="bars">' +
+      (catRows.length ? catRows.map(function (r) { return barRow(r.k, r.v, maxCat); }).join("") : '<span class="hint">Sem dados ainda.</span>') +
+    "</div></div>" +
+    '<div class="card" style="margin-bottom:1.2rem;"><div class="eyebrow">Insumos utilizados (custo)</div><div class="bars">' +
+      (insumoRows.length ? insumoRows.map(function (r) { return barRowMoney(r.k, r.v, maxIns); }).join("") : '<span class="hint">Sem dados ainda.</span>') +
+    "</div></div>" +
+    '<div class="card"><div class="eyebrow">Unidades com mais chamados</div><div class="bars">' +
+      (uniRows.length ? uniRows.map(function (r) { return barRow(r.k, r.v, Math.max(1, uniRows[0].v)); }).join("") : '<span class="hint">Sem dados ainda.</span>') +
+    "</div></div>";
+}
+function barRow(label, val, max) {
+  var pct = Math.round((val / max) * 100);
+  return '<div class="bar-row"><span>' + esc(label) + '</span><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div><span class="bar-val mono">' + val + "</span></div>";
+}
+function barRowMoney(label, val, max) {
+  var pct = Math.round((val / max) * 100);
+  return '<div class="bar-row"><span>' + esc(label) + '</span><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div><span class="bar-val mono">' + brl(val) + "</span></div>";
+}
+
+/* ---------- CONFIG (gestor / super_admin) ---------- */
+function renderConfig(c) {
+  var isSA = state.profile.role === "super_admin";
+  var minhaEquipe = state.data.equipes.filter(function (e) { return e.id === state.currentEquipeId; })[0];
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Sistema</div><h1>Configurações</h1></div></div>' +
+    (isSA ? "" :
+      '<div class="card" style="margin-bottom:1.2rem;max-width:520px;">' +
+        '<div class="eyebrow">Sua equipe</div>' +
+        '<div class="field"><label>Nome</label><input type="text" id="cfg_equipe_nome" value="' + esc(minhaEquipe ? minhaEquipe.nome : "") + '"></div>' +
+        '<p class="hint">Código de convite da equipe (compartilhe com Encarregados/Executores para eles criarem a conta): <strong class="mono">' + esc(minhaEquipe ? minhaEquipe.invite_code : "—") + "</strong></p>" +
+        '<button class="btn" id="cfg_equipe_save" style="margin-top:.6rem;">Salvar nome</button>' +
+      "</div>") +
+    '<div class="card" style="margin-bottom:1.2rem;max-width:520px;">' +
+      '<div class="eyebrow">Categorias de serviço' + (isSA && minhaEquipe ? " — " + esc(minhaEquipe.nome) : "") + "</div>" +
+      (state.currentEquipeId ?
+        '<div id="catList" style="margin:.8rem 0;display:flex;flex-wrap:wrap;gap:.4rem;"></div>' +
+        '<div class="field-row"><input type="text" id="cfg_novacat" placeholder="Nova categoria" style="flex:1;"><button class="btn" id="cfg_addcat">Adicionar</button></div>'
+        : '<p class="hint">Selecione uma equipe para gerenciar categorias.</p>') +
+    "</div>" +
+    '<div class="card" style="margin-bottom:1.2rem;max-width:520px;">' +
+      '<div class="eyebrow">Sua conta</div>' +
+      "<p><strong>" + esc(state.profile.nome || "—") + "</strong><br>" + esc(state.profile.email) + '<br><span class="pill pill-role-' + state.profile.role + '" style="margin-top:.4rem;">' + ROLE_LABEL[state.profile.role] + "</span></p>" +
+      '<button class="btn" id="btnLogout">Sair</button>' +
+    "</div>" +
+    (pushElegivel(state.profile.role) ?
+      '<div class="card" style="margin-bottom:1.2rem;max-width:520px;">' +
+        '<div class="eyebrow">Notificações no navegador</div>' +
+        '<p class="hint" id="pushHint">Verificando status…</p>' +
+        '<button class="btn" id="pushToggleBtn" style="margin-top:.6rem;" disabled>Aguarde…</button>' +
+      "</div>" : "") +
+    (state.currentEquipeId ?
+      '<div class="card" style="max-width:520px;border-color:var(--danger);">' +
+        '<div class="eyebrow" style="color:var(--danger);">Zona de risco' + (isSA && minhaEquipe ? " — " + esc(minhaEquipe.nome) : "") + "</div>" +
+        '<p class="hint">Apaga todos os chamados (com insumos, eventos e avaliações), unidades e prestadores cadastrados desta equipe. As categorias, os insumos do catálogo e as contas da equipe são mantidos. Use apenas para limpar dados de teste antes de colocar o sistema em uso real.</p>' +
+        '<div class="field" style="margin-top:.8rem;"><label>Digite APAGAR para confirmar</label><input type="text" id="cfg_confirm"></div>' +
+        '<button class="btn btn-danger" id="cfg_reset">Apagar dados de teste</button>' +
+      "</div>" : "");
+
+  if (state.currentEquipeId) {
+    var catList = $("#catList");
+    state.data.categorias.forEach(function (cat) {
+      var s = document.createElement("span");
+      s.className = "pill " + (cat.ativo ? "pill-concluida" : "pill-cancelada");
+      s.style.cursor = "pointer";
+      s.textContent = cat.nome + (cat.ativo ? "" : " (oculta)");
+      s.title = "Clique para " + (cat.ativo ? "ocultar" : "reativar");
+      s.addEventListener("click", function () {
+        sb.from("categorias_servico").update({ ativo: !cat.ativo }).eq("id", cat.id).then(function (res) {
+          if (res.error) { toast("Erro: " + res.error.message, true); return; }
+          cat.ativo = !cat.ativo; renderView();
+        });
+      });
+      catList.appendChild(s);
+    });
+    $("#cfg_addcat").addEventListener("click", function () {
+      var v = $("#cfg_novacat").value.trim();
+      if (!v) return;
+      sb.from("categorias_servico").insert(Object.assign({ nome: v }, equipeInsertExtra())).select().then(function (res) {
+        if (res.error) { toast("Erro: " + res.error.message, true); return; }
+        state.data.categorias.push(res.data[0]); renderView();
+      });
+    });
+    $("#cfg_reset").addEventListener("click", function () {
+      if ($("#cfg_confirm").value.trim() !== "APAGAR") { toast('Digite "APAGAR" para confirmar.', true); return; }
+      Promise.all([
+        sb.from("solicitacoes").delete().eq("equipe_id", state.currentEquipeId),
+        sb.from("unidades").delete().eq("equipe_id", state.currentEquipeId),
+        sb.from("prestadores").delete().eq("equipe_id", state.currentEquipeId)
+      ]).then(function () {
+        loadEquipeData(function () { toast("Dados de teste apagados."); setView("dashboard"); });
+      });
+    });
+  }
+  if (!isSA) {
+    $("#cfg_equipe_save").addEventListener("click", function () {
+      var novoNome = $("#cfg_equipe_nome").value.trim();
+      if (!novoNome || !minhaEquipe) { toast("Informe um nome.", true); return; }
+      sb.from("equipes").update({ nome: novoNome }).eq("id", minhaEquipe.id).select().then(function (res) {
+        if (res.error) { toast("Erro: " + res.error.message, true); return; }
+        Object.assign(minhaEquipe, res.data[0]); toast("Nome da equipe atualizado.");
+      });
+    });
+  }
+  $("#btnLogout").addEventListener("click", function () { sb.auth.signOut(); });
+  if (pushElegivel(state.profile.role)) renderPushCard();
+}
+
+function renderPushCard() {
+  var hint = $("#pushHint");
+  var btn = $("#pushToggleBtn");
+  if (!hint || !btn) return;
+  pushStatus().then(function (status) {
+    if (status === "unsupported") {
+      hint.textContent = "Este navegador não suporta notificações push.";
+      btn.style.display = "none";
+    } else if (status === "denied") {
+      hint.textContent = "As notificações deste site estão bloqueadas no navegador. Para ativar, permita notificações nas configurações do site (ícone ao lado do endereço) e recarregue a página.";
+      btn.style.display = "none";
+    } else if (status === "subscribed") {
+      hint.textContent = "Notificações ativadas neste navegador. Você receberá avisos quando um chamado mudar de status.";
+      btn.textContent = "Desativar notificações";
+      btn.disabled = false;
+      btn.onclick = function () {
+        btn.disabled = true;
+        desativarPush().then(function () { toast("Notificações desativadas."); renderPushCard(); })
+          .catch(function (err) { toast("Erro: " + err.message, true); btn.disabled = false; });
+      };
+    } else {
+      hint.textContent = "Receba um aviso neste navegador quando um chamado mudar de status.";
+      btn.textContent = "Ativar notificações";
+      btn.disabled = false;
+      btn.onclick = function () {
+        btn.disabled = true;
+        ativarPush().then(function () { toast("Notificações ativadas!"); renderPushCard(); })
+          .catch(function (err) { toast("Erro: " + err.message, true); btn.disabled = false; });
+      };
+    }
+  });
+}
+
+/* ---------- MODAL / CONFIRM ---------- */
+function openModal(title, bodyHtml) {
+  closeModal();
+  var back = document.createElement("div");
+  back.className = "modal-back"; back.id = "modalBack";
+  back.innerHTML = '<div class="modal"><div class="modal-head"><h2>' + esc(title) + '</h2><button class="modal-close" id="modalCloseBtn">&times;</button></div>' + bodyHtml + "</div>";
+  document.body.appendChild(back);
+  back.addEventListener("click", function (e) { if (e.target === back) closeModal(); });
+  $("#modalCloseBtn").addEventListener("click", closeModal);
+}
+function closeModal() { var m = $("#modalBack"); if (m) m.remove(); }
+function confirmDelete(table, id, msg, onOk) {
+  openModal("Confirmar exclusão", "<p>" + esc(msg) + '</p><div style="display:flex;gap:.6rem;margin-top:1rem;"><button class="btn" id="cd_no" style="flex:1;">Cancelar</button><button class="btn btn-danger" id="cd_yes" style="flex:1;">Excluir</button></div>');
+  $("#cd_no").addEventListener("click", closeModal);
+  $("#cd_yes").addEventListener("click", function () {
+    sb.from(table).delete().eq("id", id).then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      closeModal(); toast("Excluído."); onOk();
+    });
+  });
+}
+
+boot();
+})();
+</script>
+</body>
+</html>
