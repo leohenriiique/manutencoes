@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manutenções Prediais</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2317181A' rx='16'/%3E%3Cpath d='M30 70 L50 30 L70 70 M38 55 L62 55' stroke='%23D97C2B' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F1EFE6;
+    --surface: #FBFAF5;
+    --ink: #21221D;
+    --ink-dim: #63614F;
+    --line: #DAD5C4;
+    --line-strong: #B9B29A;
+    --accent: #BE6A1E;
+    --accent-ink: #FFFDF8;
+    --accent-soft: #F0DAB9;
+    --info: #345A82;
+    --st-aberta: #A6690C;
+    --st-aberta-bg: #F6E4C4;
+    --st-andamento: #2C5C88;
+    --st-andamento-bg: #DCE7F0;
+    --st-concluida: #326B45;
+    --st-concluida-bg: #DCEADF;
+    --st-cancelada: #8A4238;
+    --st-cancelada-bg: #EEDBD6;
+    --danger: #A23B2E;
+    --shadow: 0 1px 2px rgba(33,34,29,0.06), 0 6px 20px -8px rgba(33,34,29,0.18);
+    --radius: 10px;
+    --font-display: 'Big Shoulders', 'Arial Narrow', sans-serif;
+    --font-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #17181A;
+      --surface: #1E201E;
+      --ink: #EDEAE0;
+      --ink-dim: #9A9887;
+      --line: #34362F;
+      --line-strong: #474A3F;
+      --accent: #E08A3E;
+      --accent-ink: #1A1300;
+      --accent-soft: #4A3520;
+      --info: #7FA6CC;
+      --st-aberta: #E0A542;
+      --st-aberta-bg: #3D3419;
+      --st-andamento: #7FA6CC;
+      --st-andamento-bg: #223140;
+      --st-concluida: #79C08D;
+      --st-concluida-bg: #1F3327;
+      --st-cancelada: #D08D80;
+      --st-cancelada-bg: #3A2521;
+      --danger: #D08D80;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 24px -10px rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #17181A;
+    --surface: #1E201E;
+    --ink: #EDEAE0;
+    --ink-dim: #9A9887;
+    --line: #34362F;
+    --line-strong: #474A3F;
+    --accent: #E08A3E;
+    --accent-ink: #1A1300;
+    --accent-soft: #4A3520;
+    --info: #7FA6CC;
+    --st-aberta: #E0A542;
+    --st-aberta-bg: #3D3419;
+    --st-andamento: #7FA6CC;
+    --st-andamento-bg: #223140;
+    --st-concluida: #79C08D;
+    --st-concluida-bg: #1F3327;
+    --st-cancelada: #D08D80;
+    --st-cancelada-bg: #3A2521;
+    --danger: #D08D80;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 24px -10px rgba(0,0,0,0.55);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  h1, h2, h3, .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  a { color: var(--info); }
+  button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  ::placeholder { color: var(--ink-dim); opacity: .8; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink);
+    border-radius: 8px; padding: .6em 1.1em; font-weight: 600; font-size: .92rem;
+    transition: transform .08s ease, border-color .15s ease;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover { filter: brightness(1.06); border-color: var(--accent); }
+  .btn-ghost { background: transparent; border-color: transparent; }
+  .btn-ghost:hover { border-color: var(--line-strong); }
+  .btn-danger { color: var(--danger); border-color: var(--danger); background: transparent; }
+  .btn-sm { padding: .38em .8em; font-size: .8rem; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  input[type=text], input[type=email], input[type=password], input[type=tel], textarea, select {
+    width: 100%; background: var(--surface); border: 1px solid var(--line-strong);
+    border-radius: 8px; padding: .65em .8em; color: var(--ink);
+  }
+  textarea { resize: vertical; min-height: 5.5em; }
+  label { display: block; font-size: .78rem; font-weight: 600; color: var(--ink-dim); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .35em; }
+  .field { margin-bottom: 1rem; }
+  .field-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .field-row > .field { flex: 1 1 160px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 1.25rem;
+  }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: .4em; padding: .28em .7em; border-radius: 999px;
+    font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap;
+  }
+  .pill::before { content: ''; width: .5em; height: .5em; border-radius: 50%; background: currentColor; }
+  .pill-aberta { background: var(--st-aberta-bg); color: var(--st-aberta); }
+  .pill-em_andamento { background: var(--st-andamento-bg); color: var(--st-andamento); }
+  .pill-concluida { background: var(--st-concluida-bg); color: var(--st-concluida); }
+  .pill-cancelada { background: var(--st-cancelada-bg); color: var(--st-cancelada); }
+  .pill-baixa { background: var(--line); color: var(--ink-dim); }
+  .pill-media { background: var(--st-aberta-bg); color: var(--st-aberta); }
+  .pill-alta { background: var(--st-cancelada-bg); color: var(--danger); }
+
+  /* ---------- App shell ---------- */
+  #app { min-height: 100vh; }
+  .shell { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+  .sidebar {
+    background: var(--surface); border-right: 1px solid var(--line);
+    padding: 1.4rem 1rem; display: flex; flex-direction: column; gap: 1.6rem;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand { display: flex; align-items: center; gap: .6rem; padding: 0 .3rem; }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--accent); color: var(--accent-ink);
+    display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; flex: none;
+  }
+  .brand-text { line-height: 1.05; }
+  .brand-text .t1 { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; text-transform: uppercase; letter-spacing: .02em; }
+  .brand-text .t2 { font-size: .68rem; color: var(--ink-dim); text-transform: uppercase; letter-spacing: .06em; }
+  nav.mainnav { display: flex; flex-direction: column; gap: .15rem; flex: 1; }
+  nav.mainnav button {
+    display: flex; align-items: center; gap: .6rem; text-align: left; background: none; border: none;
+    padding: .6rem .7rem; border-radius: 8px; color: var(--ink-dim); font-weight: 600; font-size: .88rem;
+  }
+  nav.mainnav button:hover { background: var(--paper); color: var(--ink); }
+  nav.mainnav button.active { background: var(--accent-soft); color: var(--ink); }
+  nav.mainnav .ic { width: 1.1em; text-align: center; opacity: .85; }
+  .side-foot { border-top: 1px solid var(--line); padding-top: 1rem; font-size: .8rem; color: var(--ink-dim); }
+  .side-foot strong { color: var(--ink); display: block; font-size: .85rem; }
+
+  main.content { padding: 2rem 2.4rem 4rem; max-width: 1180px; }
+  .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.6rem; flex-wrap: wrap; }
+  .page-head h1 { font-size: 1.9rem; }
+  .page-head .sub { color: var(--ink-dim); font-size: .92rem; margin-top: .2rem; }
+  .eyebrow { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin-bottom: .3rem; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.8rem; }
+  .stat-tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.1rem; }
+  .stat-tile .n { font-family: var(--font-display); font-weight: 800; font-size: 2.1rem; line-height: 1; }
+  .stat-tile .l { font-size: .78rem; color: var(--ink-dim); text-transform: uppercase; letter-spacing: .04em; margin-top: .4rem; }
+  .stat-tile.accent .n { color: var(--accent); }
+
+  .list { display: flex; flex-direction: column; gap: .7rem; }
+  .ticket {
+    background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--line-strong);
+    border-radius: var(--radius); padding: .95rem 1.1rem; display: flex; flex-direction: column; gap: .55rem;
+  }
+  .ticket.u-alta { border-left-color: var(--danger); }
+  .ticket.u-media { border-left-color: var(--st-aberta); }
+  .ticket-top { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+  .ticket-id { font-family: var(--font-mono); font-size: .8rem; color: var(--ink-dim); }
+  .ticket-title { font-weight: 700; font-size: 1rem; }
+  .ticket-unit { color: var(--ink-dim); font-size: .85rem; }
+  .ticket-desc { font-size: .9rem; color: var(--ink); }
+  .ticket-meta { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+  .ticket-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .3rem; }
+
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-dim); border-bottom: 1px solid var(--line-strong); padding: .5em .6em; }
+  td { padding: .65em .6em; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  .table-wrap table { min-width: 560px; }
+
+  .toolbar { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.1rem; }
+  .toolbar .grow { flex: 1 1 220px; }
+  .empty { padding: 2.4rem 1rem; text-align: center; color: var(--ink-dim); border: 1px dashed var(--line-strong); border-radius: var(--radius); }
+  .empty .display { font-size: 1.2rem; color: var(--ink); margin-bottom: .4rem; }
+
+  .modal-back { position: fixed; inset: 0; background: rgba(20,18,10,.45); display: flex; align-items: center; justify-content: center; padding: 1.2rem; z-index: 50; }
+  .modal { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line); box-shadow: var(--shadow); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; padding: 1.5rem; }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .modal-head h2 { font-size: 1.2rem; }
+  .modal-close { background: none; border: none; font-size: 1.4rem; line-height: 1; color: var(--ink-dim); padding: .2rem .4rem; }
+
+  .toast-wrap { position: fixed; bottom: 1.2rem; right: 1.2rem; display: flex; flex-direction: column; gap: .5rem; z-index: 80; max-width: 320px; }
+  .toast { background: var(--ink); color: var(--paper); padding: .7em 1em; border-radius: 8px; font-size: .87rem; box-shadow: var(--shadow); }
+  .toast.err { background: var(--danger); color: #fff; }
+
+  .timeline { display: flex; flex-direction: column; gap: 0; margin-top: .5rem; }
+  .tl-item { display: flex; gap: .8rem; padding: .5rem 0; border-left: 2px solid var(--line-strong); margin-left: .35rem; padding-left: 1rem; position: relative; }
+  .tl-item::before { content: ''; position: absolute; left: -6px; top: .65rem; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .tl-item:last-child { border-left-color: transparent; }
+  .tl-when { font-family: var(--font-mono); font-size: .74rem; color: var(--ink-dim); }
+
+  .bars { display: flex; flex-direction: column; gap: .6rem; }
+  .bar-row { display: grid; grid-template-columns: 130px 1fr 46px; align-items: center; gap: .7rem; font-size: .85rem; }
+  .bar-track { background: var(--line); border-radius: 5px; height: 12px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 5px; }
+  .bar-val { text-align: right; font-family: var(--font-mono); color: var(--ink-dim); }
+
+  /* ---------- Public (resident) page ---------- */
+  .public-wrap {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 28px 28px; background-position: center;
+  }
+  .public-card { width: 100%; max-width: 480px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 2rem; }
+  .public-head { text-align: center; margin-bottom: 1.4rem; }
+  .public-head .tag { display: inline-block; background: var(--accent); color: var(--accent-ink); font-family: var(--font-mono); font-size: .74rem; font-weight: 600; padding: .25em .6em; border-radius: 5px; margin-bottom: .8rem; }
+  .public-head h1 { font-size: 1.5rem; }
+  .unit-chip { display: inline-flex; align-items: center; gap: .5rem; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: .5em .9em; font-family: var(--font-mono); font-size: .9rem; margin-top: .6rem; }
+  .urg-choice { display: flex; gap: .5rem; }
+  .urg-choice label { flex: 1; }
+  .urg-choice input { position: absolute; opacity: 0; pointer-events: none; }
+  .urg-opt { display: block; text-align: center; border: 1px solid var(--line-strong); border-radius: 8px; padding: .6em .4em; font-size: .82rem; font-weight: 600; color: var(--ink-dim); }
+  .urg-choice input:checked + .urg-opt { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+  .success-box { text-align: center; padding: 1rem 0; }
+  .success-box .n { font-family: var(--font-display); font-size: 2.4rem; font-weight: 800; color: var(--accent); }
+
+  /* ---------- Login / landing ---------- */
+  .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .auth-card { width: 100%; max-width: 400px; }
+  .auth-tabs { display: flex; gap: .4rem; margin-bottom: 1.2rem; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: .25rem; }
+  .auth-tabs button { flex: 1; background: none; border: none; padding: .55em; border-radius: 6px; font-weight: 600; font-size: .86rem; color: var(--ink-dim); }
+  .auth-tabs button.active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+  .hint { font-size: .8rem; color: var(--ink-dim); margin-top: .2rem; }
+  .err-box { background: var(--st-cancelada-bg); color: var(--danger); border-radius: 8px; padding: .7em .9em; font-size: .85rem; margin-bottom: 1rem; }
+
+  .qr-box { text-align: center; }
+  .qr-box .render { display: inline-block; background: #fff; padding: 12px; border-radius: 8px; margin: .8rem 0; }
+  .qr-link { font-family: var(--font-mono); font-size: .78rem; word-break: break-all; background: var(--paper); padding: .6em .7em; border-radius: 6px; display: block; margin-top: .6rem; }
+
+  .switch { display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; }
+  .switch input { width: 34px; height: 20px; appearance: none; background: var(--line-strong); border-radius: 999px; position: relative; outline-offset: 3px; }
+  .switch input:checked { background: var(--accent); }
+  .switch input::after { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: left .15s; }
+  .switch input:checked::after { left: 16px; }
+
+  .topbar-mobile { display: none; }
+
+  @media (max-width: 880px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { position: fixed; bottom: 0; left: 0; right: 0; top: auto; height: auto; width: 100%;
+      flex-direction: row; align-items: center; padding: .5rem .6rem; z-index: 40; border-right: none; border-top: 1px solid var(--line);
+      overflow-x: auto; }
+    .sidebar .brand, .sidebar .side-foot { display: none; }
+    nav.mainnav { flex-direction: row; flex: none; width: max-content; min-width: 100%; justify-content: space-between; gap: .2rem; }
+    nav.mainnav button { flex: 0 0 auto; flex-direction: column; font-size: .64rem; padding: .4rem .5rem; gap: .2rem; white-space: nowrap; }
+    main.content { padding: 1.2rem 1rem 6rem; }
+    .topbar-mobile { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1rem; border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 30; }
+    .bar-row { grid-template-columns: 96px 1fr 40px; }
+  }
+
+  @media print {
+    body * { visibility: hidden; }
+    #print-area, #print-area * { visibility: visible; }
+    #print-area { position: absolute; top: 0; left: 0; width: 100%; text-align: center; padding-top: 2rem; }
+  }
+</style>
+</head>
+<body>
+<div id="app"><div style="min-height:100vh;display:flex;align-items:center;justify-content:center;color:var(--ink-dim);font-family:var(--font-mono);font-size:.85rem;">carregando…</div></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ======================= CONFIG ======================= */
+var SUPABASE_URL = "https://monvvtgqppwskpfiiubb.supabase.co";
+var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vbnZ2dGdxcHB3c2twZmlpdWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwODI0ODgsImV4cCI6MjEwNDY1ODQ4OH0.Yelfap0TJnWGvlsIvZ3Eaj50D5ghW-XjtDCvM58jaog";
+var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+
+var STATUS_LABEL = { aberta: "Aberta", em_andamento: "Em andamento", concluida: "Concluída", cancelada: "Cancelada" };
+var URG_LABEL = { baixa: "Baixa", media: "Média", alta: "Alta" };
+var NAV_ITEMS = [
+  { id: "dashboard", label: "Dashboard", ic: "◆" },
+  { id: "servicos", label: "Serviços", ic: "▣" },
+  { id: "unidades", label: "Unidades", ic: "▦" },
+  { id: "prestadores", label: "Prestadores", ic: "◈" },
+  { id: "historico", label: "Histórico", ic: "▤" },
+  { id: "relatorios", label: "Relatórios", ic: "▥" },
+  { id: "config", label: "Config.", ic: "⚙" }
+];
+
+/* ======================= HELPERS ======================= */
+function $(sel, ctx) { return (ctx || document).querySelector(sel); }
+function $all(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
+function esc(s) {
+  if (s === null || s === undefined) return "";
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+function osCode(n) { return "OS-" + String(n).padStart(5, "0"); }
+function fmtDate(iso) {
+  if (!iso) return "—";
+  var d = new Date(iso);
+  return d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+}
+function fmtDateShort(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("pt-BR");
+}
+function toast(msg, isErr) {
+  var wrap = $("#toastWrap");
+  var t = document.createElement("div");
+  t.className = "toast" + (isErr ? " err" : "");
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(function () { t.remove(); }, 4200);
+}
+function qp() { return new URLSearchParams(location.search); }
+function uuid() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0, v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+/* ======================= STATE ======================= */
+var state = {
+  session: null,
+  profile: null,
+  view: "dashboard",
+  data: { unidades: [], prestadores: [], categorias: [], solicitacoes: [] },
+  loaded: false,
+  channel: null
+};
+
+/* ======================= APP BOOT ======================= */
+function boot() {
+  var params = qp();
+  if (params.has("u")) {
+    renderPublicForm(params);
+    return;
+  }
+  sb.auth.getSession().then(function (res) {
+    state.session = res.data.session;
+    if (state.session) {
+      loadProfileAndEnter();
+    } else {
+      renderAuth();
+    }
+  });
+  sb.auth.onAuthStateChange(function (event, session) {
+    state.session = session;
+    if (event === "SIGNED_OUT") {
+      teardownRealtime();
+      renderAuth();
+    }
+  });
+}
+
+function loadProfileAndEnter() {
+  sb.from("profiles").select("*").eq("user_id", state.session.user.id).maybeSingle().then(function (res) {
+    if (res.error || !res.data || !res.data.is_staff) {
+      toast("Sua conta não tem acesso de equipe.", true);
+      sb.auth.signOut();
+      return;
+    }
+    state.profile = res.data;
+    enterApp();
+  });
+}
+
+/* ======================= PUBLIC (MORADOR) FLOW ======================= */
+function renderPublicForm(params) {
+  var unidadeId = params.get("u") || "";
+  var bloco = params.get("b") || "";
+  var numero = params.get("n") || "";
+  var app = $("#app");
+  app.innerHTML =
+    '<div class="public-wrap"><div class="public-card">' +
+      '<div class="public-head">' +
+        '<span class="tag">CHAMADO DE MANUTENÇÃO</span>' +
+        "<h1>Nova solicitação</h1>" +
+        '<div class="unit-chip">🏷 Bloco ' + esc(bloco) + " · Apto " + esc(numero) + "</div>" +
+      "</div>" +
+      '<form id="pubForm">' +
+        '<div class="field"><label>Categoria do problema</label><select id="pf_categoria" required><option value="">Selecione…</option></select></div>' +
+        '<div class="field"><label>Descreva o que está acontecendo</label><textarea id="pf_desc" required placeholder="Ex.: torneira da cozinha vazando embaixo da pia"></textarea></div>' +
+        '<div class="field"><label>Urgência</label>' +
+          '<div class="urg-choice">' +
+            '<label><input type="radio" name="urg" value="baixa"><span class="urg-opt">Baixa</span></label>' +
+            '<label><input type="radio" name="urg" value="media" checked><span class="urg-opt">Média</span></label>' +
+            '<label><input type="radio" name="urg" value="alta"><span class="urg-opt">Alta</span></label>' +
+          "</div>" +
+        "</div>" +
+        '<div class="field-row">' +
+          '<div class="field"><label>Seu nome (opcional)</label><input type="text" id="pf_nome" placeholder="Quem está solicitando"></div>' +
+          '<div class="field"><label>Telefone (opcional)</label><input type="tel" id="pf_contato" placeholder="(00) 00000-0000"></div>' +
+        "</div>" +
+        '<button class="btn btn-primary" type="submit" style="width:100%;padding:.8em;" id="pf_submit">Enviar solicitação</button>' +
+      "</form>" +
+    "</div></div>";
+
+  sb.from("categorias_servico").select("id,nome").eq("ativo", true).order("nome").then(function (res) {
+    var sel = $("#pf_categoria");
+    (res.data || []).forEach(function (c) {
+      var o = document.createElement("option");
+      o.value = c.id; o.textContent = c.nome; o.dataset.nome = c.nome;
+      sel.appendChild(o);
+    });
+  });
+
+  $("#pubForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var btn = $("#pf_submit");
+    var catSel = $("#pf_categoria");
+    var catNome = catSel.options[catSel.selectedIndex] ? catSel.options[catSel.selectedIndex].dataset.nome : "";
+    var urg = $('input[name="urg"]:checked').value;
+    var payload = {
+      unidade_id: unidadeId || null,
+      bloco: bloco, numero: numero,
+      categoria_id: catSel.value || null,
+      categoria_nome: catNome || "Outros",
+      descricao: $("#pf_desc").value.trim(),
+      urgencia: urg,
+      solicitante_nome: $("#pf_nome").value.trim() || null,
+      solicitante_contato: $("#pf_contato").value.trim() || null
+    };
+    if (!payload.descricao) { toast("Descreva o problema antes de enviar.", true); return; }
+    btn.disabled = true; btn.textContent = "Enviando…";
+    sb.from("solicitacoes").insert(payload).then(function (res) {
+      if (res.error) {
+        toast("Não foi possível enviar: " + res.error.message, true);
+        btn.disabled = false; btn.textContent = "Enviar solicitação";
+        return;
+      }
+      $(".public-card").innerHTML =
+        '<div class="success-box">' +
+          '<div class="n">✓</div>' +
+          "<h2 class=\"display\" style=\"font-size:1.3rem;margin-bottom:.5rem;\">Solicitação enviada</h2>" +
+          '<p style="color:var(--ink-dim);font-size:.92rem;">A equipe de manutenção do prédio foi notificada. Bloco ' + esc(bloco) + ", apto " + esc(numero) + ".</p>" +
+        "</div>";
+    });
+  });
+}
+
+/* ======================= AUTH (EQUIPE) ======================= */
+function renderAuth() {
+  var app = $("#app");
+  app.innerHTML =
+    '<div class="auth-wrap"><div class="auth-card">' +
+      '<div class="public-head" style="margin-bottom:1.4rem;">' +
+        '<span class="tag">MANUTENÇÕES PREDIAIS</span>' +
+        "<h1>Acesso da equipe</h1>" +
+        '<p style="color:var(--ink-dim);font-size:.88rem;margin-top:.4rem;">Síndico, zeladores e prestadores autorizados.</p>' +
+      "</div>" +
+      '<div class="card">' +
+        '<div class="auth-tabs">' +
+          '<button id="tabLogin" class="active">Entrar</button>' +
+          '<button id="tabSignup">Criar conta</button>' +
+        "</div>" +
+        '<div id="authErr" style="display:none;" class="err-box"></div>' +
+        '<form id="loginForm">' +
+          '<div class="field"><label>E-mail</label><input type="email" id="lg_email" required autocomplete="email"></div>' +
+          '<div class="field"><label>Senha</label><input type="password" id="lg_pass" required autocomplete="current-password"></div>' +
+          '<button class="btn btn-primary" type="submit" style="width:100%;padding:.75em;">Entrar</button>' +
+        "</form>" +
+        '<form id="signupForm" style="display:none;">' +
+          '<div class="field"><label>Seu nome</label><input type="text" id="su_nome" required></div>' +
+          '<div class="field"><label>E-mail</label><input type="email" id="su_email" required autocomplete="email"></div>' +
+          '<div class="field"><label>Senha</label><input type="password" id="su_pass" required minlength="6" autocomplete="new-password"></div>' +
+          '<div class="field"><label>Código de convite da equipe</label><input type="text" id="su_code" required placeholder="Fornecido pelo síndico"></div>' +
+          '<button class="btn btn-primary" type="submit" style="width:100%;padding:.75em;">Criar conta</button>' +
+        "</form>" +
+      "</div>" +
+    "</div></div>";
+
+  function showErr(msg) { var b = $("#authErr"); b.textContent = msg; b.style.display = "block"; }
+  function hideErr() { $("#authErr").style.display = "none"; }
+
+  $("#tabLogin").addEventListener("click", function () {
+    this.classList.add("active"); $("#tabSignup").classList.remove("active");
+    $("#loginForm").style.display = "block"; $("#signupForm").style.display = "none"; hideErr();
+  });
+  $("#tabSignup").addEventListener("click", function () {
+    this.classList.add("active"); $("#tabLogin").classList.remove("active");
+    $("#signupForm").style.display = "block"; $("#loginForm").style.display = "none"; hideErr();
+  });
+
+  $("#loginForm").addEventListener("submit", function (e) {
+    e.preventDefault(); hideErr();
+    sb.auth.signInWithPassword({ email: $("#lg_email").value.trim(), password: $("#lg_pass").value }).then(function (res) {
+      if (res.error) { showErr(traduzErro(res.error.message)); return; }
+      state.session = res.data.session;
+      loadProfileAndEnter();
+    });
+  });
+
+  $("#signupForm").addEventListener("submit", function (e) {
+    e.preventDefault(); hideErr();
+    sb.auth.signUp({
+      email: $("#su_email").value.trim(),
+      password: $("#su_pass").value,
+      options: { data: { nome: $("#su_nome").value.trim(), invite_code: $("#su_code").value.trim() } }
+    }).then(function (res) {
+      if (res.error) { showErr(traduzErro(res.error.message)); return; }
+      if (res.data.session) { state.session = res.data.session; loadProfileAndEnter(); }
+      else { toast("Conta criada! Confirme o acesso e entre."); $("#tabLogin").click(); }
+    });
+  });
+}
+
+function traduzErro(msg) {
+  if (!msg) return "Não foi possível concluir. Tente novamente.";
+  if (/invalid login credentials/i.test(msg)) return "E-mail ou senha incorretos.";
+  if (/código de convite inválido/i.test(msg)) return "Código de convite inválido.";
+  if (/already registered|already exists/i.test(msg)) return "Já existe uma conta com esse e-mail.";
+  return msg;
+}
+
+/* ======================= APP SHELL (EQUIPE) ======================= */
+function enterApp() {
+  Promise.all([
+    sb.from("unidades").select("*").order("bloco").order("numero"),
+    sb.from("prestadores").select("*").order("nome"),
+    sb.from("categorias_servico").select("*").order("nome"),
+    sb.from("solicitacoes").select("*").order("criado_em", { ascending: false })
+  ]).then(function (results) {
+    state.data.unidades = results[0].data || [];
+    state.data.prestadores = results[1].data || [];
+    state.data.categorias = results[2].data || [];
+    state.data.solicitacoes = results[3].data || [];
+    state.loaded = true;
+    renderShell();
+    setupRealtime();
+  });
+}
+
+function setupRealtime() {
+  teardownRealtime();
+  state.channel = sb
+    .channel("solicitacoes-live")
+    .on("postgres_changes", { event: "*", schema: "public", table: "solicitacoes" }, function () {
+      sb.from("solicitacoes").select("*").order("criado_em", { ascending: false }).then(function (res) {
+        state.data.solicitacoes = res.data || [];
+        if (["dashboard", "servicos", "historico", "relatorios"].indexOf(state.view) !== -1) renderView();
+      });
+    })
+    .subscribe();
+}
+function teardownRealtime() { if (state.channel) { sb.removeChannel(state.channel); state.channel = null; } }
+
+function renderShell() {
+  var app = $("#app");
+  app.innerHTML =
+    '<div class="shell">' +
+      '<aside class="sidebar">' +
+        '<div class="brand"><div class="brand-mark">M</div><div class="brand-text"><div class="t1">Manutenções</div><div class="t2">Gestão Predial</div></div></div>' +
+        '<nav class="mainnav" id="mainnav"></nav>' +
+        '<div class="side-foot"><strong>' + esc(state.profile.nome || state.profile.email) + "</strong>equipe do prédio</div>" +
+      "</aside>" +
+      '<main class="content" id="content"></main>' +
+    "</div>";
+
+  var nav = $("#mainnav");
+  NAV_ITEMS.forEach(function (item) {
+    var b = document.createElement("button");
+    b.innerHTML = '<span class="ic">' + item.ic + "</span><span>" + item.label + "</span>";
+    b.className = item.id === state.view ? "active" : "";
+    b.addEventListener("click", function () { state.view = item.id; renderShell(); });
+    nav.appendChild(b);
+  });
+  renderView();
+}
+
+function refreshShellNav() { $all("#mainnav button").forEach(function (b, i) { b.className = NAV_ITEMS[i].id === state.view ? "active" : ""; }); }
+
+function setView(v) { state.view = v; renderShell(); }
+
+function renderView() {
+  var c = $("#content");
+  if (!c) return;
+  if (state.view === "dashboard") return renderDashboard(c);
+  if (state.view === "servicos") return renderServicos(c);
+  if (state.view === "unidades") return renderUnidades(c);
+  if (state.view === "prestadores") return renderPrestadores(c);
+  if (state.view === "historico") return renderHistorico(c);
+  if (state.view === "relatorios") return renderRelatorios(c);
+  if (state.view === "config") return renderConfig(c);
+}
+
+/* ---------- DASHBOARD ---------- */
+function renderDashboard(c) {
+  var sol = state.data.solicitacoes;
+  var abertas = sol.filter(function (s) { return s.status === "aberta"; });
+  var andamento = sol.filter(function (s) { return s.status === "em_andamento"; });
+  var now = new Date(); var mesAtual = now.getMonth(), anoAtual = now.getFullYear();
+  var concluidasMes = sol.filter(function (s) { var d = new Date(s.atualizado_em); return s.status === "concluida" && d.getMonth() === mesAtual && d.getFullYear() === anoAtual; });
+  var prestadoresAtivos = state.data.prestadores.filter(function (p) { return p.ativo; });
+  var urgentes = sol.filter(function (s) { return s.urgencia === "alta" && (s.status === "aberta" || s.status === "em_andamento"); })
+    .sort(function (a, b) { return new Date(a.criado_em) - new Date(b.criado_em); });
+
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Visão geral</div><h1>Dashboard</h1><div class="sub">Panorama da manutenção do prédio em tempo real.</div></div></div>' +
+    '<div class="stat-grid">' +
+      statTile(state.data.unidades.length, "Unidades cadastradas") +
+      statTile(abertas.length, "Chamados abertos", true) +
+      statTile(andamento.length, "Em andamento") +
+      statTile(concluidasMes.length, "Concluídos no mês") +
+      statTile(prestadoresAtivos.length, "Prestadores ativos") +
+    "</div>" +
+    '<div class="eyebrow" style="margin-bottom:.7rem;">Chamados urgentes em aberto</div>' +
+    '<div class="list" id="urgList"></div>';
+
+  var list = $("#urgList", c);
+  if (!urgentes.length) {
+    list.innerHTML = '<div class="empty">Nenhum chamado urgente pendente no momento.</div>';
+  } else {
+    urgentes.slice(0, 6).forEach(function (s) { list.appendChild(ticketCard(s)); });
+  }
+}
+function statTile(n, label, accent) {
+  return '<div class="stat-tile' + (accent ? " accent" : "") + '"><div class="n mono">' + n + '</div><div class="l">' + esc(label) + "</div></div>";
+}
+
+/* ---------- SERVIÇOS (chamados ativos) ---------- */
+function renderServicos(c) {
+  var ativos = state.data.solicitacoes.filter(function (s) { return s.status === "aberta" || s.status === "em_andamento"; })
+    .sort(function (a, b) {
+      var ordUrg = { alta: 0, media: 1, baixa: 2 };
+      if (ordUrg[a.urgencia] !== ordUrg[b.urgencia]) return ordUrg[a.urgencia] - ordUrg[b.urgencia];
+      return new Date(a.criado_em) - new Date(b.criado_em);
+    });
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Chamados</div><h1>Serviços</h1><div class="sub">' + ativos.length + " chamado(s) em aberto ou em andamento.</div></div>" +
+    '<button class="btn btn-primary" id="btnNovoChamado">+ Registrar chamado</button></div>' +
+    '<div class="list" id="svcList"></div>';
+  var list = $("#svcList", c);
+  if (!ativos.length) list.innerHTML = '<div class="empty"><div class="display">Tudo em dia</div>Nenhum chamado ativo no momento.</div>';
+  else ativos.forEach(function (s) { list.appendChild(ticketCard(s, true)); });
+
+  $("#btnNovoChamado", c).addEventListener("click", openNovoChamadoModal);
+}
+
+function ticketCard(s, withActions) {
+  var el = document.createElement("div");
+  el.className = "ticket u-" + s.urgencia;
+  var unidade = esc(s.bloco) + " · " + esc(s.numero);
+  var prestador = state.data.prestadores.find(function (p) { return p.id === s.prestador_id; });
+  el.innerHTML =
+    '<div class="ticket-top">' +
+      '<div><div class="ticket-id mono">' + osCode(s.numero_os) + " · " + fmtDate(s.criado_em) + '</div>' +
+      '<div class="ticket-title">' + esc(s.categoria_nome) + '</div>' +
+      '<div class="ticket-unit">Unidade ' + unidade + (s.solicitante_nome ? " · " + esc(s.solicitante_nome) : "") + "</div></div>" +
+      '<div class="ticket-meta"><span class="pill pill-' + s.urgencia + '">' + URG_LABEL[s.urgencia] + '</span><span class="pill pill-' + s.status + '">' + STATUS_LABEL[s.status] + "</span></div>" +
+    "</div>" +
+    '<div class="ticket-desc">' + esc(s.descricao) + "</div>" +
+    (prestador ? '<div class="ticket-unit">Atribuído: ' + esc(prestador.nome) + "</div>" : "");
+
+  if (withActions) {
+    var actions = document.createElement("div");
+    actions.className = "ticket-actions";
+    if (s.status === "aberta") actions.appendChild(actionBtn("Iniciar", function () { updateStatus(s.id, "em_andamento"); }));
+    if (s.status === "em_andamento" || s.status === "aberta") actions.appendChild(actionBtn("Concluir", function () { updateStatus(s.id, "concluida"); }));
+    actions.appendChild(actionBtn("Atribuir prestador", function () { openAssignModal(s); }, "btn-ghost"));
+    actions.appendChild(actionBtn("Cancelar", function () { updateStatus(s.id, "cancelada"); }, "btn-ghost"));
+    actions.appendChild(actionBtn("Detalhes", function () { openDetailModal(s); }, "btn-ghost"));
+    el.appendChild(actions);
+  } else {
+    var d = document.createElement("div"); d.className = "ticket-actions";
+    d.appendChild(actionBtn("Detalhes", function () { openDetailModal(s); }, "btn-ghost"));
+    el.appendChild(d);
+  }
+  return el;
+}
+function actionBtn(label, fn, cls) {
+  var b = document.createElement("button");
+  b.className = "btn btn-sm " + (cls || "btn-primary");
+  b.textContent = label;
+  b.addEventListener("click", fn);
+  return b;
+}
+
+function updateStatus(id, status) {
+  sb.from("solicitacoes").update({ status: status }).eq("id", id).then(function (res) {
+    if (res.error) { toast("Erro ao atualizar: " + res.error.message, true); return; }
+    var s = state.data.solicitacoes.find(function (x) { return x.id === id; });
+    if (s) s.status = status;
+    toast("Chamado atualizado para " + STATUS_LABEL[status] + ".");
+    renderView();
+  });
+}
+
+function openAssignModal(s) {
+  var options = state.data.prestadores.filter(function (p) { return p.ativo; })
+    .map(function (p) { return '<option value="' + p.id + '"' + (p.id === s.prestador_id ? " selected" : "") + ">" + esc(p.nome) + (p.especialidade ? " — " + esc(p.especialidade) : "") + "</option>"; }).join("");
+  openModal("Atribuir prestador", '<div class="field"><label>Prestador responsável</label><select id="m_prestador"><option value="">Nenhum</option>' + options + "</select></div>" +
+    '<button class="btn btn-primary" id="m_save" style="width:100%;">Salvar</button>');
+  $("#m_save").addEventListener("click", function () {
+    var val = $("#m_prestador").value || null;
+    sb.from("solicitacoes").update({ prestador_id: val }).eq("id", s.id).then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      s.prestador_id = val; closeModal(); toast("Prestador atribuído."); renderView();
+    });
+  });
+}
+
+function openDetailModal(s) {
+  openModal(osCode(s.numero_os), '<div id="detBody">carregando histórico…</div>');
+  sb.from("solicitacao_eventos").select("*").eq("solicitacao_id", s.id).order("criado_em").then(function (res) {
+    var evs = res.data || [];
+    var html = '<p style="margin-bottom:.8rem;"><span class="pill pill-' + s.status + '">' + STATUS_LABEL[s.status] + '</span> <span class="pill pill-' + s.urgencia + '">' + URG_LABEL[s.urgencia] + "</span></p>" +
+      "<p><strong>Unidade:</strong> " + esc(s.bloco) + " · " + esc(s.numero) + "</p>" +
+      "<p><strong>Categoria:</strong> " + esc(s.categoria_nome) + "</p>" +
+      "<p><strong>Descrição:</strong> " + esc(s.descricao) + "</p>" +
+      (s.solicitante_nome ? "<p><strong>Solicitante:</strong> " + esc(s.solicitante_nome) + (s.solicitante_contato ? " · " + esc(s.solicitante_contato) : "") + "</p>" : "") +
+      '<div class="eyebrow" style="margin-top:1rem;">Linha do tempo</div><div class="timeline">' +
+      evs.map(function (e) { return '<div class="tl-item"><div><div class="tl-when">' + fmtDate(e.criado_em) + '</div><div>' + STATUS_LABEL[e.status] + (e.nota ? " — " + esc(e.nota) : "") + "</div></div></div>"; }).join("") +
+      "</div>";
+    $("#detBody").innerHTML = html;
+  });
+}
+
+function openNovoChamadoModal() {
+  var catOpts = state.data.categorias.map(function (c) { return '<option value="' + c.id + '" data-nome="' + esc(c.nome) + '">' + esc(c.nome) + "</option>"; }).join("");
+  var uniOpts = state.data.unidades.map(function (u) { return '<option value="' + u.id + '">' + esc(u.bloco) + " · " + esc(u.numero) + "</option>"; }).join("");
+  openModal("Registrar chamado", (state.data.unidades.length ?
+    '<div class="field"><label>Unidade</label><select id="nc_unidade" required>' + uniOpts + "</select></div>" :
+    '<p class="hint">Cadastre uma unidade antes de registrar um chamado manual.</p>') +
+    '<div class="field"><label>Categoria</label><select id="nc_categoria">' + catOpts + "</select></div>" +
+    '<div class="field"><label>Descrição</label><textarea id="nc_desc" required></textarea></div>' +
+    '<div class="field"><label>Urgência</label><select id="nc_urg"><option value="baixa">Baixa</option><option value="media" selected>Média</option><option value="alta">Alta</option></select></div>' +
+    (state.data.unidades.length ? '<button class="btn btn-primary" id="nc_save" style="width:100%;">Registrar</button>' : ""));
+  var saveBtn = $("#nc_save");
+  if (saveBtn) saveBtn.addEventListener("click", function () {
+    var u = state.data.unidades.find(function (x) { return x.id === $("#nc_unidade").value; });
+    var catSel = $("#nc_categoria");
+    var catNome = catSel.options[catSel.selectedIndex] ? catSel.options[catSel.selectedIndex].dataset.nome : "Outros";
+    var desc = $("#nc_desc").value.trim();
+    if (!desc) { toast("Descreva o chamado.", true); return; }
+    sb.from("solicitacoes").insert({ unidade_id: u.id, bloco: u.bloco, numero: u.numero, categoria_id: catSel.value || null, categoria_nome: catNome, descricao: desc, urgencia: $("#nc_urg").value }).select().then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      state.data.solicitacoes.unshift(res.data[0]);
+      closeModal(); toast("Chamado registrado."); renderView();
+    });
+  });
+}
+
+/* ---------- UNIDADES ---------- */
+function renderUnidades(c) {
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Cadastro</div><h1>Unidades</h1><div class="sub">' + state.data.unidades.length + " unidade(s) cadastrada(s)." + "</div></div>" +
+    '<button class="btn btn-primary" id="btnNovaUnidade">+ Nova unidade</button></div>';
+
+  if (!state.data.unidades.length) {
+    c.innerHTML += '<div class="empty"><div class="display">Nenhuma unidade ainda</div>Cadastre a primeira unidade para gerar o QR code de solicitação.</div>';
+  } else {
+    var wrap = document.createElement("div"); wrap.className = "table-wrap";
+    var tb = document.createElement("table");
+    tb.innerHTML = "<thead><tr><th>Bloco</th><th>Nº</th><th>Morador</th><th>Telefone</th><th></th></tr></thead>";
+    var tbody = document.createElement("tbody");
+    state.data.unidades.forEach(function (u) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + esc(u.bloco) + "</td><td>" + esc(u.numero) + "</td><td>" + esc(u.morador || "—") + '</td><td class="mono">' + esc(u.telefone || "—") + "</td>";
+      var td = document.createElement("td");
+      td.style.textAlign = "right"; td.style.whiteSpace = "nowrap";
+      var bQr = actionBtn("QR", function () { openQrModal(u); }, "btn-ghost btn-sm");
+      var bEd = actionBtn("Editar", function () { openUnidadeModal(u); }, "btn-ghost btn-sm");
+      var bDel = actionBtn("Excluir", function () { confirmDelete("unidades", u.id, "Excluir unidade " + u.bloco + "-" + u.numero + "?", function () { state.data.unidades = state.data.unidades.filter(function (x) { return x.id !== u.id; }); renderView(); }); }, "btn-ghost btn-sm");
+      td.appendChild(bQr); td.appendChild(bEd); td.appendChild(bDel);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    });
+    tb.appendChild(tbody); wrap.appendChild(tb); c.appendChild(wrap);
+  }
+  $("#btnNovaUnidade", c).addEventListener("click", function () { openUnidadeModal(); });
+}
+
+function openUnidadeModal(u) {
+  openModal(u ? "Editar unidade" : "Nova unidade",
+    '<div class="field-row"><div class="field"><label>Bloco</label><input type="text" id="u_bloco" value="' + esc(u ? u.bloco : "") + '" required></div>' +
+    '<div class="field"><label>Número / Apto</label><input type="text" id="u_numero" value="' + esc(u ? u.numero : "") + '" required></div></div>' +
+    '<div class="field"><label>Morador</label><input type="text" id="u_morador" value="' + esc(u ? u.morador : "") + '"></div>' +
+    '<div class="field"><label>Telefone</label><input type="tel" id="u_telefone" value="' + esc(u ? u.telefone : "") + '"></div>' +
+    '<div class="field"><label>Observações</label><textarea id="u_obs">' + esc(u ? u.observacoes : "") + "</textarea></div>" +
+    '<button class="btn btn-primary" id="u_save" style="width:100%;">Salvar</button>');
+  $("#u_save").addEventListener("click", function () {
+    var payload = { bloco: $("#u_bloco").value.trim(), numero: $("#u_numero").value.trim(), morador: $("#u_morador").value.trim() || null, telefone: $("#u_telefone").value.trim() || null, observacoes: $("#u_obs").value.trim() || null };
+    if (!payload.bloco || !payload.numero) { toast("Preencha bloco e número.", true); return; }
+    var q = u ? sb.from("unidades").update(payload).eq("id", u.id).select() : sb.from("unidades").insert(payload).select();
+    q.then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      if (u) { Object.assign(u, res.data[0]); } else { state.data.unidades.push(res.data[0]); }
+      state.data.unidades.sort(function (a, b) { return (a.bloco + a.numero).localeCompare(b.bloco + b.numero); });
+      closeModal(); toast("Unidade salva."); renderView();
+    });
+  });
+}
+
+function openQrModal(u) {
+  var url = location.origin + location.pathname + "?u=" + u.id + "&b=" + encodeURIComponent(u.bloco) + "&n=" + encodeURIComponent(u.numero);
+  openModal("QR · " + u.bloco + "-" + u.numero,
+    '<div class="qr-box" id="print-area"><div class="render" id="qrRender"></div><div class="qr-link">' + esc(url) + '</div>' +
+    '<p class="hint">Fixe este QR na porta ou mural da unidade. Ao escanear, o morador abre o formulário de solicitação já identificado.</p></div>' +
+    '<div style="display:flex;gap:.6rem;margin-top:1rem;"><button class="btn" id="qr_copy" style="flex:1;">Copiar link</button><button class="btn btn-primary" id="qr_print" style="flex:1;">Imprimir</button></div>');
+  new QRCode($("#qrRender"), { text: url, width: 200, height: 200, correctLevel: QRCode.CorrectLevel.M });
+  $("#qr_copy").addEventListener("click", function () { navigator.clipboard.writeText(url).then(function () { toast("Link copiado."); }); });
+  $("#qr_print").addEventListener("click", function () { window.print(); });
+}
+
+/* ---------- PRESTADORES ---------- */
+function renderPrestadores(c) {
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Cadastro</div><h1>Prestadores</h1><div class="sub">' + state.data.prestadores.length + " prestador(es) cadastrado(s)." + "</div></div>" +
+    '<button class="btn btn-primary" id="btnNovoPrestador">+ Novo prestador</button></div>';
+  if (!state.data.prestadores.length) {
+    c.innerHTML += '<div class="empty"><div class="display">Nenhum prestador ainda</div>Cadastre eletricistas, encanadores e demais fornecedores do prédio.</div>';
+  } else {
+    var wrap = document.createElement("div"); wrap.className = "table-wrap";
+    var tb = document.createElement("table");
+    tb.innerHTML = "<thead><tr><th>Nome</th><th>Especialidade</th><th>Contato</th><th>Status</th><th></th></tr></thead>";
+    var tbody = document.createElement("tbody");
+    state.data.prestadores.forEach(function (p) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + esc(p.nome) + "</td><td>" + esc(p.especialidade || "—") + '</td><td class="mono">' + esc(p.telefone || p.email || "—") + "</td>" +
+        "<td><span class=\"pill " + (p.ativo ? "pill-concluida" : "pill-cancelada") + "\">" + (p.ativo ? "Ativo" : "Inativo") + "</span></td>";
+      var td = document.createElement("td"); td.style.textAlign = "right"; td.style.whiteSpace = "nowrap";
+      td.appendChild(actionBtn("Editar", function () { openPrestadorModal(p); }, "btn-ghost btn-sm"));
+      td.appendChild(actionBtn("Excluir", function () { confirmDelete("prestadores", p.id, "Excluir prestador " + p.nome + "?", function () { state.data.prestadores = state.data.prestadores.filter(function (x) { return x.id !== p.id; }); renderView(); }); }, "btn-ghost btn-sm"));
+      tr.appendChild(td); tbody.appendChild(tr);
+    });
+    tb.appendChild(tbody); wrap.appendChild(tb); c.appendChild(wrap);
+  }
+  $("#btnNovoPrestador", c).addEventListener("click", function () { openPrestadorModal(); });
+}
+
+function openPrestadorModal(p) {
+  var catOpts = state.data.categorias.map(function (c) { return '<option value="' + esc(c.nome) + '"' + (p && p.especialidade === c.nome ? " selected" : "") + ">" + esc(c.nome) + "</option>"; }).join("");
+  openModal(p ? "Editar prestador" : "Novo prestador",
+    '<div class="field"><label>Nome</label><input type="text" id="p_nome" value="' + esc(p ? p.nome : "") + '" required></div>' +
+    '<div class="field"><label>Especialidade</label><select id="p_esp"><option value="">—</option>' + catOpts + "</select></div>" +
+    '<div class="field-row"><div class="field"><label>Telefone</label><input type="tel" id="p_tel" value="' + esc(p ? p.telefone : "") + '"></div>' +
+    '<div class="field"><label>E-mail</label><input type="email" id="p_email" value="' + esc(p ? p.email : "") + '"></div></div>' +
+    '<div class="field"><label class="switch"><input type="checkbox" id="p_ativo"' + (!p || p.ativo ? " checked" : "") + "><span>Ativo</span></label></div>" +
+    '<button class="btn btn-primary" id="p_save" style="width:100%;">Salvar</button>');
+  $("#p_save").addEventListener("click", function () {
+    var payload = { nome: $("#p_nome").value.trim(), especialidade: $("#p_esp").value || null, telefone: $("#p_tel").value.trim() || null, email: $("#p_email").value.trim() || null, ativo: $("#p_ativo").checked };
+    if (!payload.nome) { toast("Informe o nome.", true); return; }
+    var q = p ? sb.from("prestadores").update(payload).eq("id", p.id).select() : sb.from("prestadores").insert(payload).select();
+    q.then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      if (p) Object.assign(p, res.data[0]); else state.data.prestadores.push(res.data[0]);
+      closeModal(); toast("Prestador salvo."); renderView();
+    });
+  });
+}
+
+/* ---------- HISTÓRICO ---------- */
+function renderHistorico(c) {
+  var arquivados = state.data.solicitacoes.filter(function (s) { return s.status === "concluida" || s.status === "cancelada"; });
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Arquivo</div><h1>Histórico</h1><div class="sub">' + arquivados.length + " chamado(s) concluído(s) ou cancelado(s)." + "</div></div></div>" +
+    '<div class="list" id="histList"></div>';
+  var list = $("#histList", c);
+  if (!arquivados.length) { list.innerHTML = '<div class="empty">Ainda não há chamados arquivados.</div>'; return; }
+  arquivados.sort(function (a, b) { return new Date(b.atualizado_em) - new Date(a.atualizado_em); });
+  arquivados.forEach(function (s) { list.appendChild(ticketCard(s)); });
+}
+
+/* ---------- RELATÓRIOS ---------- */
+function renderRelatorios(c) {
+  var sol = state.data.solicitacoes;
+  var byStatus = { aberta: 0, em_andamento: 0, concluida: 0, cancelada: 0 };
+  sol.forEach(function (s) { byStatus[s.status]++; });
+  var byCat = {};
+  sol.forEach(function (s) { byCat[s.categoria_nome] = (byCat[s.categoria_nome] || 0) + 1; });
+  var catRows = Object.keys(byCat).map(function (k) { return { k: k, v: byCat[k] }; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 8);
+  var byUnidade = {};
+  sol.forEach(function (s) { var k = s.bloco + " · " + s.numero; byUnidade[k] = (byUnidade[k] || 0) + 1; });
+  var uniRows = Object.keys(byUnidade).map(function (k) { return { k: k, v: byUnidade[k] }; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 5);
+
+  var concluidos = sol.filter(function (s) { return s.status === "concluida"; });
+  var tempoMedioDias = "—";
+  if (concluidos.length) {
+    var totalH = concluidos.reduce(function (acc, s) { return acc + (new Date(s.atualizado_em) - new Date(s.criado_em)); }, 0);
+    tempoMedioDias = (totalH / concluidos.length / 86400000).toFixed(1).replace(".", ",");
+  }
+
+  var maxStatus = Math.max(1, byStatus.aberta, byStatus.em_andamento, byStatus.concluida, byStatus.cancelada);
+  var maxCat = Math.max(1, catRows.length ? catRows[0].v : 1);
+
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Indicadores</div><h1>Relatórios</h1><div class="sub">Baseado em ' + sol.length + " solicitação(ões) registrada(s)." + "</div></div></div>" +
+    '<div class="stat-grid">' + statTile(sol.length, "Total de chamados") + statTile(tempoMedioDias + " dias", "Tempo médio de conclusão", true) + statTile(catRows.length, "Categorias distintas") + "</div>" +
+    '<div class="card" style="margin-bottom:1.2rem;"><div class="eyebrow">Chamados por status</div><div class="bars">' +
+      barRow("Abertos", byStatus.aberta, maxStatus) + barRow("Em andamento", byStatus.em_andamento, maxStatus) + barRow("Concluídos", byStatus.concluida, maxStatus) + barRow("Cancelados", byStatus.cancelada, maxStatus) +
+    "</div></div>" +
+    '<div class="card" style="margin-bottom:1.2rem;"><div class="eyebrow">Chamados por categoria</div><div class="bars">' +
+      (catRows.length ? catRows.map(function (r) { return barRow(r.k, r.v, maxCat); }).join("") : '<span class="hint">Sem dados ainda.</span>') +
+    "</div></div>" +
+    '<div class="card"><div class="eyebrow">Unidades com mais chamados</div><div class="bars">' +
+      (uniRows.length ? uniRows.map(function (r) { return barRow(r.k, r.v, Math.max(1, uniRows[0].v)); }).join("") : '<span class="hint">Sem dados ainda.</span>') +
+    "</div></div>";
+}
+function barRow(label, val, max) {
+  var pct = Math.round((val / max) * 100);
+  return '<div class="bar-row"><span>' + esc(label) + '</span><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div><span class="bar-val">' + val + "</span></div>";
+}
+
+/* ---------- CONFIG ---------- */
+function renderConfig(c) {
+  c.innerHTML =
+    '<div class="page-head"><div><div class="eyebrow">Sistema</div><h1>Configurações</h1></div></div>' +
+    '<div class="card" style="margin-bottom:1.2rem;max-width:520px;">' +
+      '<div class="eyebrow">Categorias de serviço</div>' +
+      '<div id="catList" style="margin:.8rem 0;display:flex;flex-wrap:wrap;gap:.4rem;"></div>' +
+      '<div class="field-row"><input type="text" id="cfg_novacat" placeholder="Nova categoria" style="flex:1;"><button class="btn" id="cfg_addcat">Adicionar</button></div>' +
+    "</div>" +
+    '<div class="card" style="margin-bottom:1.2rem;max-width:520px;">' +
+      '<div class="eyebrow">Sua conta</div>' +
+      "<p><strong>" + esc(state.profile.nome || "—") + "</strong><br>" + esc(state.profile.email) + "</p>" +
+      '<button class="btn" id="btnLogout">Sair</button>' +
+    "</div>" +
+    '<div class="card" style="max-width:520px;border-color:var(--danger);">' +
+      '<div class="eyebrow" style="color:var(--danger);">Zona de risco</div>' +
+      '<p class="hint">Apaga todos os chamados, unidades e prestadores cadastrados. As categorias e as contas da equipe são mantidas. Use apenas para limpar dados de teste antes de colocar o sistema em uso real.</p>' +
+      '<div class="field" style="margin-top:.8rem;"><label>Digite APAGAR para confirmar</label><input type="text" id="cfg_confirm"></div>' +
+      '<button class="btn btn-danger" id="cfg_reset">Apagar dados de teste</button>' +
+    "</div>";
+
+  var catList = $("#catList");
+  state.data.categorias.forEach(function (cat) {
+    var s = document.createElement("span");
+    s.className = "pill " + (cat.ativo ? "pill-concluida" : "pill-cancelada");
+    s.style.cursor = "pointer";
+    s.textContent = cat.nome + (cat.ativo ? "" : " (oculta)");
+    s.title = "Clique para " + (cat.ativo ? "ocultar" : "reativar");
+    s.addEventListener("click", function () {
+      sb.from("categorias_servico").update({ ativo: !cat.ativo }).eq("id", cat.id).then(function (res) {
+        if (res.error) { toast("Erro: " + res.error.message, true); return; }
+        cat.ativo = !cat.ativo; renderView();
+      });
+    });
+    catList.appendChild(s);
+  });
+  $("#cfg_addcat").addEventListener("click", function () {
+    var v = $("#cfg_novacat").value.trim();
+    if (!v) return;
+    sb.from("categorias_servico").insert({ nome: v }).select().then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      state.data.categorias.push(res.data[0]); renderView();
+    });
+  });
+  $("#btnLogout").addEventListener("click", function () { sb.auth.signOut(); });
+  $("#cfg_reset").addEventListener("click", function () {
+    if ($("#cfg_confirm").value.trim() !== "APAGAR") { toast('Digite "APAGAR" para confirmar.', true); return; }
+    Promise.all([
+      sb.from("solicitacoes").delete().not("id", "is", null),
+      sb.from("unidades").delete().not("id", "is", null),
+      sb.from("prestadores").delete().not("id", "is", null)
+    ]).then(function () {
+      state.data.solicitacoes = []; state.data.unidades = []; state.data.prestadores = [];
+      toast("Dados de teste apagados."); setView("dashboard");
+    });
+  });
+}
+
+/* ---------- MODAL / CONFIRM ---------- */
+function openModal(title, bodyHtml) {
+  closeModal();
+  var back = document.createElement("div");
+  back.className = "modal-back"; back.id = "modalBack";
+  back.innerHTML = '<div class="modal"><div class="modal-head"><h2>' + esc(title) + '</h2><button class="modal-close" id="modalCloseBtn">&times;</button></div>' + bodyHtml + "</div>";
+  document.body.appendChild(back);
+  back.addEventListener("click", function (e) { if (e.target === back) closeModal(); });
+  $("#modalCloseBtn").addEventListener("click", closeModal);
+}
+function closeModal() { var m = $("#modalBack"); if (m) m.remove(); }
+function confirmDelete(table, id, msg, onOk) {
+  openModal("Confirmar exclusão", "<p>" + esc(msg) + '</p><div style="display:flex;gap:.6rem;margin-top:1rem;"><button class="btn" id="cd_no" style="flex:1;">Cancelar</button><button class="btn btn-danger" id="cd_yes" style="flex:1;">Excluir</button></div>');
+  $("#cd_no").addEventListener("click", closeModal);
+  $("#cd_yes").addEventListener("click", function () {
+    sb.from(table).delete().eq("id", id).then(function (res) {
+      if (res.error) { toast("Erro: " + res.error.message, true); return; }
+      closeModal(); toast("Excluído."); onOk();
+    });
+  });
+}
+
+boot();
+})();
+</script>
+</body>
+</html>
