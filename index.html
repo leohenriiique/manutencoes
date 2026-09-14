@@ -170,14 +170,20 @@
     padding: 1.4rem 1rem; display: flex; flex-direction: column; gap: 1.6rem;
     position: sticky; top: 0; height: 100vh;
   }
-  .brand { display: flex; align-items: center; gap: .6rem; padding: 0 .3rem; }
+  .brand-row { display: flex; align-items: center; justify-content: space-between; gap: .4rem; }
+  .brand { display: flex; align-items: center; gap: .6rem; padding: 0 .3rem; min-width: 0; }
   .brand-mark {
     width: 34px; height: 34px; border-radius: 8px; background: var(--accent); color: var(--accent-ink);
     display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; flex: none;
   }
-  .brand-text { line-height: 1.05; }
+  .brand-text { line-height: 1.05; overflow: hidden; }
   .brand-text .t1 { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; text-transform: uppercase; letter-spacing: .02em; }
   .brand-text .t2 { font-size: .68rem; color: var(--ink-dim); text-transform: uppercase; letter-spacing: .06em; }
+  .nav-toggle {
+    flex: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+    background: none; border: 1px solid var(--line); border-radius: 8px; color: var(--ink-dim); font-size: .85rem; padding: 0;
+  }
+  .nav-toggle:hover { border-color: var(--accent); color: var(--ink); }
   nav.mainnav { display: flex; flex-direction: column; gap: .15rem; flex: 1; }
   nav.mainnav button {
     display: flex; align-items: center; gap: .6rem; text-align: left; background: none; border: none;
@@ -189,6 +195,13 @@
   .side-foot { border-top: 1px solid var(--line); padding-top: 1rem; font-size: .8rem; color: var(--ink-dim); }
   .side-foot strong { color: var(--ink); display: block; font-size: .85rem; }
   .side-foot .rolebadge { margin-top: .4rem; }
+
+  .shell.nav-collapsada { grid-template-columns: 72px 1fr; }
+  .sidebar.collapsada { padding-left: .5rem; padding-right: .5rem; }
+  .sidebar.collapsada .brand-row { flex-direction: column; gap: .6rem; }
+  .sidebar.collapsada .brand-text, .sidebar.collapsada .equipe-switcher, .sidebar.collapsada .side-foot { display: none; }
+  .sidebar.collapsada nav.mainnav button { justify-content: center; padding: .6rem; }
+  .sidebar.collapsada nav.mainnav button span:not(.ic) { display: none; }
 
   main.content { padding: 2rem 2.4rem 4rem; max-width: 1180px; }
   .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.6rem; flex-wrap: wrap; }
@@ -321,6 +334,9 @@
       flex-direction: row; align-items: center; padding: .5rem .6rem; z-index: 40; border-right: none; border-top: 1px solid var(--line);
       overflow-x: auto; }
     .sidebar .brand, .sidebar .side-foot, .sidebar .equipe-switcher { display: none; }
+    .nav-toggle { display: none; }
+    .shell.nav-collapsada { grid-template-columns: 1fr; }
+    .sidebar.collapsada nav.mainnav button span:not(.ic) { display: block; }
     nav.mainnav { flex-direction: row; flex: none; width: max-content; min-width: 100%; justify-content: space-between; gap: .2rem; }
     nav.mainnav button { flex: 0 0 auto; flex-direction: column; font-size: .64rem; padding: .4rem .5rem; gap: .2rem; white-space: nowrap; }
     main.content { padding: 1.2rem 1rem 6rem; }
@@ -507,6 +523,7 @@ var state = {
   filtroServicos: null,
   filtrosRelatorios: {},
   relFiltrosAbertos: false,
+  navColapsada: (function () { try { return localStorage.getItem("mp_nav_colapsada") === "1"; } catch (e) { return false; } })(),
   currentEquipeId: null,
   data: { unidades: [], prestadores: [], categorias: [], solicitacoes: [], insumos: [], profiles: [], solIns: [], equipes: [], convites: [] },
   loaded: false,
@@ -884,9 +901,12 @@ function renderShell() {
       "</div>";
   }
   app.innerHTML =
-    '<div class="shell">' +
-      '<aside class="sidebar">' +
-        '<div class="brand"><div class="brand-mark">M</div><div class="brand-text"><div class="t1">Manutenções</div><div class="t2">Gestão Predial</div></div></div>' +
+    '<div class="shell' + (state.navColapsada ? " nav-collapsada" : "") + '">' +
+      '<aside class="sidebar' + (state.navColapsada ? " collapsada" : "") + '">' +
+        '<div class="brand-row">' +
+          '<div class="brand"><div class="brand-mark">M</div><div class="brand-text"><div class="t1">Manutenções</div><div class="t2">Gestão Predial</div></div></div>' +
+          '<button type="button" class="nav-toggle" id="navToggle" title="' + (state.navColapsada ? "Mostrar menu" : "Ocultar menu") + '">' + (state.navColapsada ? "▸" : "◂") + "</button>" +
+        "</div>" +
         switcherHtml +
         '<nav class="mainnav" id="mainnav"></nav>' +
         '<div class="side-foot"><strong>' + esc(state.profile.nome || state.profile.email) + '</strong>' +
@@ -901,6 +921,7 @@ function renderShell() {
     var b = document.createElement("button");
     b.innerHTML = '<span class="ic">' + item.ic + "</span><span>" + item.label + "</span>";
     b.className = item.id === state.view ? "active" : "";
+    b.title = item.label;
     b.addEventListener("click", function () { state.view = item.id; state.filtroServicos = null; renderShell(); });
     nav.appendChild(b);
   });
@@ -908,6 +929,11 @@ function renderShell() {
     var sw = $("#equipeSwitch");
     if (sw) sw.addEventListener("change", function () { onEquipeSwitch(sw.value || null); });
   }
+  $("#navToggle").addEventListener("click", function () {
+    state.navColapsada = !state.navColapsada;
+    try { localStorage.setItem("mp_nav_colapsada", state.navColapsada ? "1" : "0"); } catch (e) {}
+    renderShell();
+  });
   renderView();
 }
 
