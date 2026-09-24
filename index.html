@@ -1470,6 +1470,14 @@ function setupRealtime() {
     .subscribe();
 }
 function teardownRealtime() { if (state.channel) { sb.removeChannel(state.channel); state.channel = null; } }
+  document.addEventListener("visibilitychange", function () {
+  if (document.visibilityState === "visible" && state.loaded && state.currentEquipeId) {
+    loadEquipeData(function () {
+      renderView();
+      setupRealtime();
+    });
+  }
+});
 
 var TAB_PRIMARIAS = ["equipes", "dashboard", "meus_chamados", "minhas_limpezas", "servicos", "unidades", "historico", "relatorios"];
 var TAB_LABEL = { dashboard: "Início", meus_chamados: "Meus chamados", config: "Configurações", notificacoes: "Configurações" };
